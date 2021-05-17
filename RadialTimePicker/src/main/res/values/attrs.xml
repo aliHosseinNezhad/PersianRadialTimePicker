@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RadialTimePicker">
+        <attr name="clock_background" format="color" />
+        <attr name="time_selector_color" format="color" />
+        <attr name="clock_numbers_background" format="color" />
+        <attr name="clock_numbers_text_color" format="color" />
+
+        <attr name="text_typeface" format="reference" />
+        <attr name="clock_mode" format="integer">
+            <enum name="hour12" value="0" />
+            <enum name="hour24" value="1" />
+            <enum name="minute" value="2" />
+        </attr>
+    </declare-styleable>
+
+
+</resources>
