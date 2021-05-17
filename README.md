@@ -3,7 +3,7 @@
 [![](https://jitpack.io/v/ashiqursuperfly/android-ranged-time-picker-dialog.svg)](https://jitpack.io/#ashiqursuperfly/android-ranged-time-picker-dialog)
 
 This library offers a Radial time picker designed on [Google's Material Design Principals For Pickers](http://www.google.com/design/spec/components/pickers.html) for Android 4.4 (API 19) +.
-Persian Radial Time Picker via Bottom sheet design. Developed by @aliHn-ziro
+Persian Radial Time Picker via Bottom sheet design. Developed by @aliHosseinNezhad
 
 <img src="resources/ezgif.com-gif-maker.gif" height="500" width="300">
 
