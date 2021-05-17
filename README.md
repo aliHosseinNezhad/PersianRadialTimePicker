@@ -1,6 +1,6 @@
 # PersianRadialTimePicker
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![](https://jitpack.io/v/ashiqursuperfly/android-ranged-time-picker-dialog.svg)](https://jitpack.io/#ashiqursuperfly/android-ranged-time-picker-dialog)
+[![](https://jitpack.io/v/osameh15/PersianRadialTimePicker.svg)](https://jitpack.io/#osameh15/PersianRadialTimePicker)
 
 This library offers a Radial time picker designed on [Google's Material Design Principals For Pickers](http://www.google.com/design/spec/components/pickers.html) for Android 4.4 (API 19) +.
 Persian Radial Time Picker via Bottom sheet design. Developed by @aliHosseinNezhad
@@ -36,7 +36,7 @@ You can report any issue on issues page. Note: If you speak Persian, you can sub
 ```
 - In your app-level build.gradle file: 
 ```
-    implementation 'com.github.PersianRadialTimePicker:time-picker:1.0.1'
+    implementation 'com.github.osameh15:PersianRadialTimePicker:1.0.2'
 ```
 ## How to use
 
