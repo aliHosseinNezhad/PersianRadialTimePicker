@@ -45,7 +45,6 @@ class PageData {
     var uiColorData = UiColorData()
     var viewsText = ViewsText()
     var changeLiveData = MutableLiveData(true)
-    var changeByUserLiveData = MutableLiveData<Boolean>()
     var pageState = PageState.START
     var start = PageStateModel()
     var end = PageStateModel()
@@ -237,7 +236,7 @@ class UiColorData {
     var transparentSecondary = Color.argb(80, 0, 200, 180)
     var background: Int = Color.rgb(0, 218, 197)
     var radialTimePickerColors = MutableLiveData<RadialTimePickerColors>()
-    var liveData = MutableLiveData(true)
+
 }
 
 class RadialTimePickerColors {
@@ -339,27 +338,27 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
 
     fun setTimeTextColors(color: Int) {
         pagesData.uiColorData.timeTextColor = color
-        pagesData.uiColorData.liveData.postValue(true)
+        pagesData.notifyChange(true)
     }
 
     fun setTextsColors(color: Int) {
         pagesData.uiColorData.textColors = color
-        pagesData.uiColorData.liveData.postValue(true)
+        pagesData.notifyChange(true)
     }
 
     fun setBackgroundColor(color: Int) {
         pagesData.uiColorData.background = color
-        pagesData.uiColorData.liveData.postValue(true)
+        pagesData.notifyChange(true)
     }
 
     fun setTitleColor(color: Int) {
         pagesData.uiColorData.stateTitleColor = color
-        pagesData.uiColorData.liveData.postValue(true)
+        pagesData.notifyChange(true)
     }
 
     fun setSecondaryColor(color: Int) {
         pagesData.uiColorData.secondaryColor = color
-        pagesData.uiColorData.liveData.postValue(true)
+        pagesData.notifyChange(true)
     }
 
     fun setRadialTimePickerColors(radialTimePickerColors: RadialTimePickerColors) {
@@ -424,10 +423,8 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
     }
 
     private fun updateNonAnimationViews() {
+        updateViewsColor()
         updateTexts()
-        acceptBtn.rippleColor = pagesData.uiColorData.rippleColorCreator()
-        pageStateChangeBtn.rippleColor = pagesData.uiColorData.rippleColorCreator()
-
         if (pagesData.getPage().clockData.timeCountMode == PageData.TimeCountMode.Mode24) {
             (radioAmPmBtn.parent as View).visibility = View.GONE
             (digitalClockBtn.getChildAt(0) as ImageView).setImageDrawable(context?.let {
@@ -443,9 +440,6 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
                 )
             })
         }
-
-
-
         if (pagesData.getPage().clockData.clockArrow == Minute) {
             hourTextBackShadow.visibility = View.VISIBLE
             minuteTextBackShadow.visibility = View.INVISIBLE
@@ -470,6 +464,8 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
     }
 
     private fun updateViewsColor() {
+        acceptBtn.rippleColor = pagesData.uiColorData.rippleColorCreator()
+        pageStateChangeBtn.rippleColor = pagesData.uiColorData.rippleColorCreator()
         pagesData.uiColorData.timeCardViewColor.let {
             timeTextCardView.setCardBackgroundColor(it)
         }
@@ -574,9 +570,6 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
                 minuteTitleTextView.typeface = it
                 hourTitleTextView.typeface = it
             }
-        }
-        pagesData.uiColorData.liveData.observe(viewLifecycleOwner) {
-            updateViewsColor()
         }
         pagesData.uiColorData.radialTimePickerColors.observe(viewLifecycleOwner) {
             updateTimePickerColors(it)
