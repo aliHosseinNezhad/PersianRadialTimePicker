@@ -1,9 +1,11 @@
 # PersianRadialTimePicker
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![platform](https://img.shields.io/badge/platform-android-brightgreen.svg)](https://developer.android.com/index.html)
+[![API](https://img.shields.io/badge/API-19%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=19)
 [![](https://jitpack.io/v/osameh15/PersianRadialTimePicker.svg)](https://jitpack.io/#osameh15/PersianRadialTimePicker)
 
 This library offers a Radial time picker designed on [Google's Material Design Principals For Pickers](http://www.google.com/design/spec/components/pickers.html) for Android 4.4 (API 19) +.
-Persian Radial Time Picker via Bottom sheet design. Developed by @aliHosseinNezhad
+Persian Radial Time Picker via Bottom sheet design. Developed by [@aliHosseinNezhad](https://github.com/aliHosseinNezhad).
 
 <img src="resources/ezgif.com-gif-maker.gif" height="500" width="300">
 
@@ -38,7 +40,7 @@ You can report any issue on issues page. Note: If you speak Persian, you can sub
 ```
 implementation 'com.github.aliHosseinNezhad:radialTimePicker:+'
 ```
-- Or
+-- Or
 ```
     implementation 'com.github.osameh15:PersianRadialTimePicker:1.0.2'
 ```
