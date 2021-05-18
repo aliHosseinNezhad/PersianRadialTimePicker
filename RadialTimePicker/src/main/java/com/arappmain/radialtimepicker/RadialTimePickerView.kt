@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Typeface
 import android.os.Build
 import android.os.CountDownTimer
 import android.text.TextPaint
@@ -85,11 +86,7 @@ class RadialTimePickerView @JvmOverloads constructor(
             initPaint()
             postInvalidate()
         }
-    var textTypeface = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        context.resources.getFont(R.font.dana_fanu_light)
-    } else {
-        ResourcesCompat.getFont(context, R.font.dana_fanu_light)
-    }
+    var textTypeface: Typeface? = null
         set(value) {
             field = value
             initPaint()
@@ -290,7 +287,7 @@ class RadialTimePickerView @JvmOverloads constructor(
                     if (index == 0)
                         0
                     else index + 12
-                } else if(index == 0) 12
+                } else if (index == 0) 12
                 else index
             }
         }
@@ -310,34 +307,40 @@ class RadialTimePickerView @JvmOverloads constructor(
     private fun setValueWithStyledAttributes(attrs: AttributeSet?) {
         val typedArray = context.theme.obtainStyledAttributes(
             attrs,
-            R.styleable.RadialTimePicker,
+            R.styleable.RadialTimePickerView,
             0, 0
         )
 
         clockBackColor =
-            typedArray.getColor(R.styleable.RadialTimePicker_clock_background, clockBackColor)
+            typedArray.getColor(R.styleable.RadialTimePickerView_clock_background, clockBackColor)
         selectorColor =
-            typedArray.getColor(R.styleable.RadialTimePicker_time_selector_color, selectorColor)
+            typedArray.getColor(R.styleable.RadialTimePickerView_time_selector_color, selectorColor)
         clockNumberBackColor = typedArray.getColor(
-            R.styleable.RadialTimePicker_clock_numbers_background,
+            R.styleable.RadialTimePickerView_clock_numbers_background,
             clockNumberBackColor
         )
         textsColors =
-            typedArray.getColor(R.styleable.RadialTimePicker_clock_numbers_text_color, textsColors)
+            typedArray.getColor(R.styleable.RadialTimePickerView_clock_numbers_text_color, textsColors)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            textTypeface = typedArray.getFont(R.styleable.RadialTimePicker_text_typeface)
-        } else
-            textTypeface = ResourcesCompat.getFont(
-                context,
-                typedArray.getResourceId(
-                    R.styleable.RadialTimePicker_text_typeface,
-                    R.font.dana_fanu_light
-                )
+            textTypeface = typedArray.getFont(R.styleable.RadialTimePickerView_text_typeface)
+        } else {
+            var x = typedArray.getResourceId(
+                R.styleable.RadialTimePickerView_text_typeface, 0
             )
+            if (x != 0) {
+                textTypeface = ResourcesCompat.getFont(
+                    context,
+                    x
+                )
+            }
 
-        typedArray.getInt(R.styleable.RadialTimePicker_clock_mode, 1).let {
+
+        }
+
+
+        typedArray.getInt(R.styleable.RadialTimePickerView_clock_mode, 1).let {
             clockMode =
-                ClockMode.values()[typedArray.getInt(R.styleable.RadialTimePicker_clock_mode, 0)]
+                ClockMode.values()[typedArray.getInt(R.styleable.RadialTimePickerView_clock_mode, 0)]
         }
 
         typedArray.recycle()
@@ -602,7 +605,7 @@ class RadialTimePickerView @JvmOverloads constructor(
         ).toFloat()
 
         selectorRadiusWeight = calculateSelectorRadiusWeightByTouch(x, y, width / 2, height / 2)
-        onTimeChangeListener?.onTimeChange(getTime(), clockMode , motionEvent)
+        onTimeChangeListener?.onTimeChange(getTime(), clockMode, motionEvent)
         postInvalidate()
     }
 
@@ -625,7 +628,13 @@ class RadialTimePickerView @JvmOverloads constructor(
         val add = if (x - cx >= 0) 0.0 else Math.PI
         val step = 2 * Math.PI / count
         val bA =
-            (acos((cy - y) / Math.sqrt(Math.pow((cx - x).toDouble(), 2.0) + Math.pow((cy - y).toDouble(), 2.0))))
+            (acos((cy - y) / Math.sqrt(
+                Math.pow(
+                    (cx - x).toDouble(),
+                    2.0
+                ) + Math.pow((cy - y).toDouble(), 2.0)
+            )
+            ))
         val angle = if (add == 0.0) (bA) else (2 * add - bA);
 
         val index = ((angle % (step / 2)) / (step) + angle / step).roundToInt().run {
@@ -638,6 +647,8 @@ class RadialTimePickerView @JvmOverloads constructor(
             Log.i("TAG023", "selectorAngleWeight: $it")
         }
     }
+
+
 }
 
 abstract class AnimCountDownTimer(duration: Long, interval: Long) :
@@ -672,12 +683,11 @@ abstract class AnimCountDownTimer(duration: Long, interval: Long) :
         else -1f
 }
 
-enum class ClockMode
-{
+
+enum class ClockMode {
     Hour12, Hour24, Minute
 }
 
-interface OnTimeChangeListener
-{
+interface OnTimeChangeListener {
     fun onTimeChange(time: Int, clockMode: ClockMode, motionEvent: MotionEvent)
 }

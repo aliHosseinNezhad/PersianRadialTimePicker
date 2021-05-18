@@ -1,6 +1,7 @@
 package com.arappmain.radialtimepicker
 
 import android.content.Context
+import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
@@ -12,6 +13,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
+import kotlin.math.min
 
 class RoundRadioGroup : ConstraintLayout {
     constructor(context: Context) : super(context)
@@ -23,10 +25,10 @@ class RoundRadioGroup : ConstraintLayout {
     private lateinit var amTextView: TextView
     private lateinit var pmBtn: View
     private lateinit var amBtn: View
-    val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-    lateinit var baseView: View
-    lateinit var pmView: ConstraintLayout
-    lateinit var amView: ConstraintLayout
+    private val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    private lateinit var baseView: View
+    private lateinit var pmView: ConstraintLayout
+    private lateinit var amView: ConstraintLayout
 
     companion object {
         const val PM = 1
@@ -132,13 +134,6 @@ class RoundRadioGroup : ConstraintLayout {
                 it.bottomToBottom = ConstraintSet.PARENT_ID
             }
         })
-        setButtonsBack()
-
-
-    }
-
-    private fun setButtonsBack() {
-
 
     }
 
@@ -159,6 +154,14 @@ class RoundRadioGroup : ConstraintLayout {
             it(i)
         }
         stateChangeListener?.onChangeState(i)
+    }
+
+    fun setAmText(amText: String) {
+        amTextView.text = amText
+    }
+
+    fun setPmText(pmText: String) {
+        pmTextView.text = pmText
     }
 
 

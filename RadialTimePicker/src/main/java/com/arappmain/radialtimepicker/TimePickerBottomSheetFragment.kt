@@ -2,6 +2,7 @@ package com.arappmain.radialtimepicker
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
@@ -9,6 +10,7 @@ import android.os.Bundle
 import android.view.*
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.NumberPicker
 import android.widget.TextView
 import androidx.annotation.IntRange
 import androidx.cardview.widget.CardView
@@ -39,11 +41,15 @@ interface OnTimeResultListener {
 }
 
 class PageData {
+
+    var uiColorData = UiColorData()
+    var viewsText = ViewsText()
     var changeLiveData = MutableLiveData(true)
     var changeByUserLiveData = MutableLiveData<Boolean>()
     var pageState = PageState.START
     var start = PageStateModel()
     var end = PageStateModel()
+    var digitalAnalogClockMode = ClockAnalogDigitalMode.Analog
 
     fun getPage() = if (pageState == PageState.START) {
         start
@@ -51,6 +57,10 @@ class PageData {
 
     fun notifyChange(b: Boolean) {
         changeLiveData.postValue(b)
+    }
+
+    enum class ClockAnalogDigitalMode {
+        Analog, Digital
     }
 
     inner class PageStateModel() {
@@ -194,7 +204,24 @@ class PageData {
 }
 
 class UiColorData {
-    var rippleColor: Int = Color.rgb(0, 218, 197)
+    fun rippleColorCreator(): ColorStateList {
+        return ColorStateList(
+            arrayOf(
+                intArrayOf(android.R.attr.state_pressed),
+                intArrayOf(android.R.attr.state_focused),
+                intArrayOf(android.R.attr.state_activated),
+                intArrayOf(android.R.attr.state_selected)
+            ),
+            intArrayOf(
+                rippleColor?:background,
+                secondaryColor,
+                secondaryColor,
+                rippleColor?:background
+            )
+        )
+    }
+    var timeCardViewColor: Int = Color.WHITE
+    var rippleColor: Int? = null
     var timeTextColor: Int = Color.rgb(100, 100, 100)
     var textColors: Int = Color.WHITE
     var secondaryColor: Int = Color.argb(250, 0, 180, 170)
@@ -221,7 +248,22 @@ class RadialTimePickerColors {
     var clockNumberBackColor: Int = 0
 }
 
+class ViewsText {
+    var startTime = "زمان شروع"
+    var endTime = "زمان پایان"
+    var amText = "قبل ظهر"
+    var pmText = "بعد ظهر"
+    var acceptText = "تایید"
+    var minuteText = "دقیقه"
+    var hourText = "ساعت"
+}
+
+interface SetViewsText {
+    fun onChangeViewsText(viewsText: ViewsText): ViewsText
+}
+
 class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
+    private lateinit var numberPicker: NumberPicker
     private lateinit var minuteTitleTextView: TextView
     private lateinit var hourTitleTextView: TextView
 
@@ -235,7 +277,7 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
     private lateinit var minuteTextBackShadow: View
     private lateinit var hourTextBackShadow: View
     private lateinit var centerTimeText: TextView
-    private lateinit var clockCountModeBtn: CardView
+    private lateinit var timeTextCardView: CardView
     private lateinit var radioAmPmBtn: RoundRadioGroup
     private lateinit var hourTextView: TextView
     private lateinit var minuteTextView: TextView
@@ -246,10 +288,11 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
     private lateinit var pageStateChangeBtn: MaterialButton
     //end
 
+
     //data
     private var pagesData = PageData()
     private var typeface = MutableLiveData<Typeface>()
-    private var uiColorData = UiColorData()
+
 
     //end
     private var onTimeResultListener: OnTimeResultListener? = null
@@ -295,40 +338,61 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
     }
 
     fun setTimeTextColors(color: Int) {
-        uiColorData.timeTextColor = color
-        uiColorData.liveData.postValue(true)
+        pagesData.uiColorData.timeTextColor = color
+        pagesData.uiColorData.liveData.postValue(true)
     }
 
     fun setTextsColors(color: Int) {
-        uiColorData.textColors = color
-        uiColorData.liveData.postValue(true)
+        pagesData.uiColorData.textColors = color
+        pagesData.uiColorData.liveData.postValue(true)
     }
 
     fun setBackgroundColor(color: Int) {
-        uiColorData.background = color
-        uiColorData.liveData.postValue(true)
+        pagesData.uiColorData.background = color
+        pagesData.uiColorData.liveData.postValue(true)
     }
 
     fun setTitleColor(color: Int) {
-        uiColorData.stateTitleColor = color
-        uiColorData.liveData.postValue(true)
+        pagesData.uiColorData.stateTitleColor = color
+        pagesData.uiColorData.liveData.postValue(true)
     }
 
     fun setSecondaryColor(color: Int) {
-        uiColorData.secondaryColor = color
-        uiColorData.liveData.postValue(true)
+        pagesData.uiColorData.secondaryColor = color
+        pagesData.uiColorData.liveData.postValue(true)
     }
 
     fun setRadialTimePickerColors(radialTimePickerColors: RadialTimePickerColors) {
-        uiColorData.radialTimePickerColors.postValue(radialTimePickerColors)
+        pagesData.uiColorData.radialTimePickerColors.postValue(radialTimePickerColors)
     }
 
-    fun setTextTypeFace(typeface: Typeface) {
-        this.typeface.postValue(typeface)
+    fun setAnalogDigitalMode(mode: PageData.ClockAnalogDigitalMode) {
+        pagesData.digitalAnalogClockMode = mode
+        pagesData.notifyChange(true)
     }
 
-    var startTime: String = "زمان شروع"
-    var endTime: String = "زمان پایان"
+    fun setTextTypeFace(typeface: Typeface?) {
+        typeface?.let {
+            this.typeface.postValue(typeface)
+        }
+
+    }
+
+    fun setTimeCardViewColor(color: Int) {
+        pagesData.uiColorData.timeCardViewColor = color
+        pagesData.notifyChange(true)
+    }
+
+    fun setViewsText(param: (viewsText: ViewsText) -> ViewsText) {
+        pagesData.viewsText = param(pagesData.viewsText)
+        pagesData.notifyChange(true)
+    }
+
+    fun setViewsText(listener: SetViewsText) {
+        pagesData.viewsText = listener.onChangeViewsText(pagesData.viewsText)
+        pagesData.notifyChange(true)
+    }
+
 
     //view updaters
     private fun getRadialTimePickerValue(): RadialTimePickerInputData {
@@ -360,14 +424,10 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
     }
 
     private fun updateNonAnimationViews() {
-        if (pagesData.pageState == PageData.PageState.START) {
-            pageStateTextView.text = startTime
-            (pageStateChangeBtn).text = endTime
+        updateTexts()
+        acceptBtn.rippleColor = pagesData.uiColorData.rippleColorCreator()
+        pageStateChangeBtn.rippleColor = pagesData.uiColorData.rippleColorCreator()
 
-        } else {
-            pageStateTextView.text = endTime
-            (pageStateChangeBtn).text = startTime
-        }
         if (pagesData.getPage().clockData.timeCountMode == PageData.TimeCountMode.Mode24) {
             (radioAmPmBtn.parent as View).visibility = View.GONE
             (digitalClockBtn.getChildAt(0) as ImageView).setImageDrawable(context?.let {
@@ -410,21 +470,26 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
     }
 
     private fun updateViewsColor() {
-        bottomSheetCardBack.setCardBackgroundColor(uiColorData.background)
-        uiColorData.secondaryColor.let {
+        pagesData.uiColorData.timeCardViewColor.let {
+            timeTextCardView.setCardBackgroundColor(it)
+        }
+        bottomSheetCardBack.setCardBackgroundColor(pagesData.uiColorData.background)
+        pagesData.uiColorData.secondaryColor.let {
             acceptBtn.setBackgroundColor(it)
             pageStateChangeBtn.setBackgroundColor(it)
             radioCardView.setCardBackgroundColor(it)
-            minuteTextBackShadow.background = ColorDrawable(uiColorData.transparentSecondary)
-            hourTextBackShadow.background = ColorDrawable(uiColorData.transparentSecondary)
+            minuteTextBackShadow.background =
+                ColorDrawable(pagesData.uiColorData.transparentSecondary)
+            hourTextBackShadow.background =
+                ColorDrawable(pagesData.uiColorData.transparentSecondary)
         }
-        pageStateTextView.setTextColor(uiColorData.stateTitleColor)
-        uiColorData.textColors.let {
+        pageStateTextView.setTextColor(pagesData.uiColorData.stateTitleColor)
+        pagesData.uiColorData.textColors.let {
             acceptBtn.setTextColor(it)
             pageStateChangeBtn.setTextColor(it)
             radioAmPmBtn.setTextColors(it)
         }
-        uiColorData.timeTextColor.let {
+        pagesData.uiColorData.timeTextColor.let {
             hourTextView.setTextColor(it)
             minuteTextView.setTextColor(it)
             centerTimeText.setTextColor(it)
@@ -432,6 +497,22 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
             hourTitleTextView.setTextColor(it)
             minuteTitleTextView.setTextColor(it)
         }
+    }
+
+    private fun updateTexts() {
+        if (pagesData.pageState == PageData.PageState.START) {
+            pageStateTextView.text = pagesData.viewsText.startTime
+            (pageStateChangeBtn).text = pagesData.viewsText.endTime
+
+        } else {
+            pageStateTextView.text = pagesData.viewsText.endTime
+            (pageStateChangeBtn).text = pagesData.viewsText.startTime
+        }
+        hourTitleTextView.text = pagesData.viewsText.hourText
+        minuteTitleTextView.text = pagesData.viewsText.minuteText
+        acceptBtn.text = pagesData.viewsText.acceptText
+        radioAmPmBtn.setAmText(pagesData.viewsText.amText)
+        radioAmPmBtn.setPmText(pagesData.viewsText.pmText)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -490,13 +571,14 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
                 pageStateChangeBtn.typeface = it
                 pageStateTextView.typeface = it
                 centerTimeText.typeface = it
-
+                minuteTitleTextView.typeface = it
+                hourTitleTextView.typeface = it
             }
         }
-        uiColorData.liveData.observe(viewLifecycleOwner) {
+        pagesData.uiColorData.liveData.observe(viewLifecycleOwner) {
             updateViewsColor()
         }
-        uiColorData.radialTimePickerColors.observe(viewLifecycleOwner) {
+        pagesData.uiColorData.radialTimePickerColors.observe(viewLifecycleOwner) {
             updateTimePickerColors(it)
         }
     }
@@ -519,7 +601,7 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
         }
         radialTimePickerView.setOnTimeChangeListener(object : OnTimeChangeListener {
             override fun onTimeChange(time: Int, clockMode: ClockMode, motionEvent: MotionEvent) {
-                if (motionEvent.action != MotionEvent.ACTION_UP){
+                if (motionEvent.action != MotionEvent.ACTION_UP) {
                     pagesData.getPage().clockData.setTime(time)
                     pagesData.changeLiveData.postValue(false)
                 } else {
@@ -585,7 +667,7 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
         hourTextView = view.findViewById<TextView>(R.id.hour_text)
         radioAmPmBtn = view.findViewById<RoundRadioGroup>(R.id.pm_am_ratio_btn)
         centerTimeText = view.findViewById<TextView>(R.id.center_time_text)
-        clockCountModeBtn = view.findViewById<CardView>(R.id.text_digital_time_card_view)
+        timeTextCardView = view.findViewById<CardView>(R.id.text_digital_time_card_view)
         hourTextBackShadow = view.findViewById<View>(R.id.hour_text_back_shadow)
         minuteTextBackShadow = view.findViewById<View>(R.id.minute_text_back_shadow)
         minuteTextBtn = view.findViewById<View>(R.id.minute_text_btn)
@@ -596,7 +678,14 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
         radioCardView = view.findViewById<CardView>(R.id.radio_card_view)
         hourTitleTextView = view.findViewById<TextView>(R.id.hour_title_text)
         minuteTitleTextView = view.findViewById<TextView>(R.id.minute_title_text)
-
+//        numberPicker.maxValue = 1
+//        numberPicker.minValue = 0
+//        numberPicker.value = 0
+//        numberPicker.setFormatter(NumberPicker.Formatter {
+//            val numberFormat = DecimalFormat("00")
+//            var x = numberFormat.format(it)
+//            return@Formatter if (it == 0) "am" else "pm"
+//        })
         hourTextView.viewTreeObserver.addOnGlobalLayoutListener {
             var textSize = min(hourTextView.height, hourTextView.width) * 0.15f
 //           Toast.makeText(context, "$textSize", Toast.LENGTH_SHORT).show()
@@ -605,5 +694,9 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
             centerTimeText.textSize = textSize
 
         }
+
+
     }
+
+
 }
