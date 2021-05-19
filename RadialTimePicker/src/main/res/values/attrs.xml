@@ -26,10 +26,67 @@
             <flag name="italic" value="2"/>
             <flag name="bold_italic" value="3"/>
         </attr>
+        <attr name="mnp_typeface" format="reference"/>
         <attr format="boolean" name="mnpEditable"/>
         <attr format="boolean" name="mnpWrapped"/>
         <attr format="string" name="mnpFontname"/>
     </declare-styleable>
-
+    <attr format="reference" name="customNumberPickerStyle"/>
+    <declare-styleable name="CustomNumberPicker">
+        <attr name="np_maxTextLength" format="integer"/>
+        <attr format="dimension" name="np_width"/>
+        <attr format="dimension" name="np_height"/>
+        <attr format="boolean" name="np_accessibilityDescriptionEnabled"/>
+        <attr format="reference" name="np_divider"/>
+        <attr format="enum" name="np_dividerType">
+            <enum name="side_lines" value="0"/>
+            <enum name="underline" value="1"/>
+        </attr>
+        <attr format="color" name="np_dividerColor"/>
+        <attr format="dimension" name="np_dividerDistance"/>
+        <attr format="dimension" name="np_dividerLength"/>
+        <attr format="dimension" name="np_dividerThickness"/>
+        <attr format="boolean" name="np_fadingEdgeEnabled"/>
+        <attr format="float" name="np_fadingEdgeStrength"/>
+        <attr format="string" name="np_formatter"/>
+        <attr format="boolean" name="np_hideWheelUntilFocused"/>
+        <attr format="dimension" name="np_itemSpacing"/>
+        <attr format="float" name="np_lineSpacingMultiplier"/>
+        <attr format="integer" name="np_max"/>
+        <attr format="integer" name="np_maxFlingVelocityCoefficient"/>
+        <attr format="integer" name="np_min"/>
+        <attr format="enum" name="np_order">
+            <enum name="ascending" value="0"/>
+            <enum name="descending" value="1"/>
+        </attr>
+        <attr format="enum" name="np_orientation">
+            <enum name="horizontal" value="0"/>
+            <enum name="vertical" value="1"/>
+        </attr>
+        <attr format="boolean" name="np_scrollerEnabled"/>
+        <attr format="enum" name="np_selectedTextAlign">
+            <enum name="selectedTextAlignRight" value="0"/>
+            <enum name="selectedTextAlignCenter" value="1"/>
+            <enum name="selectedTextAlignLeft" value="2"/>
+        </attr>
+        <attr format="color" name="np_selectedTextColor"/>
+        <attr format="dimension" name="np_selectedTextSize"/>
+        <attr format="boolean" name="np_selectedTextStrikeThru"/>
+        <attr format="boolean" name="np_selectedTextUnderline"/>
+        <attr format="string" name="np_selectedTypeface"/>
+        <attr format="enum" name="np_textAlign">
+            <enum name="textAlignRight" value="0"/>
+            <enum name="textAlignCenter" value="1"/>
+            <enum name="textAlignLeft" value="2"/>
+        </attr>
+        <attr format="color" name="np_textColor"/>
+        <attr format="dimension" name="np_textSize"/>
+        <attr format="boolean" name="np_textStrikeThru"/>
+        <attr format="boolean" name="np_textUnderline"/>
+        <attr format="string" name="np_typeface"/>
+        <attr format="integer" name="np_value"/>
+        <attr format="integer" name="np_wheelItemCount"/>
+        <attr format="boolean" name="np_wrapSelectorWheel"/>
+    </declare-styleable>
 
 </resources>

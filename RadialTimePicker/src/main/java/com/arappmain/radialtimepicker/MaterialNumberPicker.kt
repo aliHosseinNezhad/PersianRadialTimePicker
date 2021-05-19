@@ -1,24 +1,26 @@
 package com.arappmain.radialtimepicker
 
 import android.content.Context
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
-import android.graphics.Typeface
+import android.graphics.*
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.text.InputType
 import android.util.AttributeSet
+import android.util.Log
 import android.util.TypedValue
+import android.view.MotionEvent
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.NumberPicker
+import android.widget.Scroller
+import androidx.core.content.res.ResourcesCompat
+import kotlin.math.min
 
 class MaterialNumberPicker : NumberPicker {
-
     companion object {
         private const val DEFAULT_VALUE = 1
-        private const val MAX_VALUE = 10
+        private const val MAX_VALUE = 4
+        private const val MIN_VALUE = 0
         private const val DEFAULT_SEPARATOR_COLOR = Color.TRANSPARENT
         private const val DEFAULT_TEXT_COLOR = Color.BLACK
         private const val DEFAULT_TEXT_SIZE = 40
@@ -26,6 +28,17 @@ class MaterialNumberPicker : NumberPicker {
         private const val DEFAULT_EDITABLE = false
         private const val DEFAULT_WRAPPED = false
     }
+    init {
+
+    }
+
+    var x = arrayListOf(
+        "بعد ظهر",
+        "قبل از ظهر",
+        "sdlk",
+        "fslkdjfl",
+        "sldkfjslkd"
+    )
 
     var separatorColor: Int = Color.TRANSPARENT
         set(value) {
@@ -44,6 +57,13 @@ class MaterialNumberPicker : NumberPicker {
             field = value
             updateTextAttributes()
         }
+
+    var typeface: Typeface? = null
+        set(value) {
+            field = value
+            updateTextAttributes()
+        }
+
     var textSize: Int = DEFAULT_TEXT_SIZE
         set(value) {
             field = value
@@ -52,12 +72,8 @@ class MaterialNumberPicker : NumberPicker {
     var editable: Boolean = DEFAULT_EDITABLE
         set(value) {
             field = value
-            descendantFocusability = if (value) ViewGroup.FOCUS_AFTER_DESCENDANTS else ViewGroup.FOCUS_BLOCK_DESCENDANTS
-        }
-    var fontName: String? = null
-        set(value) {
-            field = value
-            updateTextAttributes()
+            descendantFocusability =
+                if (value) ViewGroup.FOCUS_AFTER_DESCENDANTS else ViewGroup.FOCUS_BLOCK_DESCENDANTS
         }
     private val inputEditText: EditText? by lazy {
         try {
@@ -70,7 +86,8 @@ class MaterialNumberPicker : NumberPicker {
     }
     private val wheelPaint: Paint? by lazy {
         try {
-            val selectorWheelPaintField = NumberPicker::class.java.getDeclaredField("mSelectorWheelPaint")
+            val selectorWheelPaintField =
+                NumberPicker::class.java.getDeclaredField("mSelectorWheelPaint")
             selectorWheelPaintField.isAccessible = true
             selectorWheelPaintField.get(this) as Paint
         } catch (e: Exception) {
@@ -78,7 +95,8 @@ class MaterialNumberPicker : NumberPicker {
         }
     }
     private val divider: Drawable? by lazy {
-        val dividerField = NumberPicker::class.java.declaredFields.firstOrNull { it.name == "mSelectionDivider" }
+        val dividerField =
+            NumberPicker::class.java.declaredFields.firstOrNull { it.name == "mSelectionDivider" }
         dividerField?.let {
             try {
                 it.isAccessible = true
@@ -101,7 +119,7 @@ class MaterialNumberPicker : NumberPicker {
         textStyle: Int = DEFAULT_TEXT_STYLE,
         editable: Boolean = DEFAULT_EDITABLE,
         wrapped: Boolean = DEFAULT_WRAPPED,
-        fontName: String? = null,
+        typeface: Typeface? = null,
         formatter: Formatter? = null
     ) : super(context) {
         this.minValue = minValue
@@ -111,7 +129,7 @@ class MaterialNumberPicker : NumberPicker {
         this.textColors = textColor
         this.textSize = textSize
         this.textStyle = textStyle
-        this.fontName = fontName
+        this.typeface = typeface
         this.editable = editable
         this.wrapSelectorWheel = wrapped
         setFormatter(formatter)
@@ -125,13 +143,28 @@ class MaterialNumberPicker : NumberPicker {
         minValue = a.getInteger(R.styleable.MaterialNumberPicker_mnpMinValue, DEFAULT_VALUE)
         maxValue = a.getInteger(R.styleable.MaterialNumberPicker_mnpMaxValue, MAX_VALUE)
         value = a.getInteger(R.styleable.MaterialNumberPicker_mnpValue, DEFAULT_VALUE)
-        separatorColor = a.getColor(R.styleable.MaterialNumberPicker_mnpSeparatorColor, DEFAULT_SEPARATOR_COLOR)
+        separatorColor =
+            a.getColor(R.styleable.MaterialNumberPicker_mnpSeparatorColor, DEFAULT_SEPARATOR_COLOR)
         textColors = a.getColor(R.styleable.MaterialNumberPicker_mnpTextColor, DEFAULT_TEXT_COLOR)
-        textSize = a.getDimensionPixelSize(R.styleable.MaterialNumberPicker_mnpTextSize, DEFAULT_TEXT_SIZE)
+        textSize =
+            a.getDimensionPixelSize(R.styleable.MaterialNumberPicker_mnpTextSize, DEFAULT_TEXT_SIZE)
         textStyle = a.getInt(R.styleable.MaterialNumberPicker_mnpTextColor, DEFAULT_TEXT_STYLE)
         editable = a.getBoolean(R.styleable.MaterialNumberPicker_mnpEditable, DEFAULT_EDITABLE)
-        wrapSelectorWheel = a.getBoolean(R.styleable.MaterialNumberPicker_mnpWrapped, DEFAULT_WRAPPED)
-        fontName = a.getString(R.styleable.MaterialNumberPicker_mnpFontname)
+        wrapSelectorWheel =
+            a.getBoolean(R.styleable.MaterialNumberPicker_mnpWrapped, DEFAULT_WRAPPED)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            typeface = a.getFont(R.styleable.MaterialNumberPicker_mnp_typeface)
+        } else {
+            val x = a.getResourceId(
+                R.styleable.RadialTimePickerView_text_typeface, 0
+            )
+            if (x != 0) {
+                typeface = ResourcesCompat.getFont(
+                    context,
+                    x
+                )
+            }
+        }
 
         a.recycle()
 
@@ -151,24 +184,22 @@ class MaterialNumberPicker : NumberPicker {
      * Uses reflection to access text size private attribute for both wheel and edit text inside the number picker.
      */
     private fun updateTextAttributes() {
-        val typeface = if (fontName != null)
-            Typeface.createFromAsset(context.assets, "fonts/$fontName")
-        else
-            Typeface.create(Typeface.DEFAULT, textStyle)
-
         wheelPaint?.let { paint ->
             paint.color = textColors
             paint.textSize = textSize.toFloat()
-            paint.typeface = typeface
+            paint.typeface = typeface?.also { Typeface.NORMAL }
             (0 until childCount)
                 .map { getChildAt(it) as? EditText }
                 .firstOrNull()
                 ?.let {
                     it.setTextColor(textColors)
-                    it.setTextSize(TypedValue.COMPLEX_UNIT_SP, pixelsToSp(context, textSize.toFloat()))
-                    it.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
+                    it.setTextSize(
+                        TypedValue.COMPLEX_UNIT_SP,
+                        pixelsToSp(context, textSize.toFloat())
+                    )
+                    it.inputType =
+                        InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
                     it.typeface = typeface
-
                     invalidate()
                 }
         }

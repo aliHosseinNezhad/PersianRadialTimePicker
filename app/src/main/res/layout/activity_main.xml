@@ -6,8 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-
+    <com.arappmain.radialtimepicker.DigitalTimePicker.CustomNumberPicker
+        android:id="@+id/material_number_picker"
+        app:layout_constraintTop_toTopOf="parent"
+        app:mnpTextSize="36sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
     <Button
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="onClick"
