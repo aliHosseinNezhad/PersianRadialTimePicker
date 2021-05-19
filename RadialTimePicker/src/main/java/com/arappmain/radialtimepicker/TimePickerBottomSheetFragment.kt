@@ -448,14 +448,27 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
             (radioAmPmBtn.parent as View).visibility = View.GONE
             (clockCountModeBtn.getChildAt(0) as ImageView).setImageDrawable(context?.let {
                 ContextCompat.getDrawable(
-                    it, R.drawable.icon_hour_24
+                    it, R.drawable.clock_24_count_mode
                 )
             })
         } else {
             (radioAmPmBtn.parent as View).visibility = View.VISIBLE
             (clockCountModeBtn.getChildAt(0) as ImageView).setImageDrawable(context?.let {
                 ContextCompat.getDrawable(
-                    it, R.drawable.icon_hour_12
+                    it, R.drawable.clock_12_count_mode
+                )
+            })
+        }
+        if (pagesData.digitalAnalogClockMode == Analog){
+            (clockAnalogDigitalModeChangeBtn.getChildAt(0) as ImageView).setImageDrawable(context?.let {
+                ContextCompat.getDrawable(
+                    it, R.drawable.analog_clock
+                )
+            })
+        }else{
+            (clockAnalogDigitalModeChangeBtn.getChildAt(0) as ImageView).setImageDrawable(context?.let {
+                ContextCompat.getDrawable(
+                    it, R.drawable.digital_clock
                 )
             })
         }
@@ -495,6 +508,7 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
             pageStateChangeBtn.setTextColor(it)
             radioAmPmBtn.setTextColors(it)
             (clockCountModeBtn.getChildAt(0) as ImageView).setColorFilter(it)
+            (clockAnalogDigitalModeChangeBtn.getChildAt(0) as ImageView).setColorFilter(it)
         }
         pagesData.uiColorData.timeTextColor.let {
             hourTextView.setTextColor(it)
