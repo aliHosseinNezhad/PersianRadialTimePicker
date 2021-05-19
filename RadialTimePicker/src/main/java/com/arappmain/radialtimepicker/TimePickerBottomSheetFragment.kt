@@ -18,6 +18,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import com.arappmain.radialtimepicker.ClockMode.*
+import com.arappmain.radialtimepicker.PageData.ClockAnalogDigitalMode.Analog
+import com.arappmain.radialtimepicker.PageData.ClockAnalogDigitalMode.Digital
 import com.arappmain.radialtimepicker.PageData.ClockArrow.Hour
 import com.arappmain.radialtimepicker.PageData.ClockArrow.Minute
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -41,14 +43,13 @@ interface OnTimeResultListener {
 }
 
 class PageData {
-
     var uiColorData = UiColorData()
     var viewsText = ViewsText()
     var changeLiveData = MutableLiveData(true)
     var pageState = PageState.START
     var start = PageStateModel()
     var end = PageStateModel()
-    var digitalAnalogClockMode = ClockAnalogDigitalMode.Analog
+    var digitalAnalogClockMode = Analog
 
     fun getPage() = if (pageState == PageState.START) {
         start
@@ -262,11 +263,12 @@ interface SetViewsText {
 }
 
 class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
+
+    //views
+    private lateinit var clockAnalogDigitalModeChangeBtn: FrameLayout
     private lateinit var numberPicker: NumberPicker
     private lateinit var minuteTitleTextView: TextView
     private lateinit var hourTitleTextView: TextView
-
-    //views
     private lateinit var acceptBtn: MaterialButton
     private lateinit var radioCardView: CardView
     private lateinit var bottomSheetCardBack: CardView
@@ -280,7 +282,7 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
     private lateinit var radioAmPmBtn: RoundRadioGroup
     private lateinit var hourTextView: TextView
     private lateinit var minuteTextView: TextView
-    private lateinit var digitalClockBtn: FrameLayout
+    private lateinit var clockCountModeBtn: FrameLayout
     private lateinit var bottomSheetBack: ConstraintLayout
     private var bottomSheetBehavior: BottomSheetBehavior<*>? = null
     private lateinit var radialTimePickerView: RadialTimePickerView
@@ -392,6 +394,18 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
         pagesData.notifyChange(true)
     }
 
+    fun setButtonsRippleColor(color: Int){
+        pagesData.uiColorData.rippleColor = color
+        pagesData.notifyChange(true)
+    }
+    private fun setPageState(state: PageData.PageState) {
+        pagesData.pageState = state
+        pagesData.notifyChange(true)
+    }
+
+    private fun setAmPageData(b: Boolean) {
+        pagesData.getPage().clockData.time.am = b
+    }
 
     //view updaters
     private fun getRadialTimePickerValue(): RadialTimePickerInputData {
@@ -425,16 +439,21 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
     private fun updateNonAnimationViews() {
         updateViewsColor()
         updateTexts()
+        if(pagesData.digitalAnalogClockMode == Analog){
+            radialTimePickerView.visibility = View.VISIBLE
+        } else{
+            radialTimePickerView.visibility = View.GONE
+        }
         if (pagesData.getPage().clockData.timeCountMode == PageData.TimeCountMode.Mode24) {
             (radioAmPmBtn.parent as View).visibility = View.GONE
-            (digitalClockBtn.getChildAt(0) as ImageView).setImageDrawable(context?.let {
+            (clockCountModeBtn.getChildAt(0) as ImageView).setImageDrawable(context?.let {
                 ContextCompat.getDrawable(
                     it, R.drawable.icon_hour_24
                 )
             })
         } else {
             (radioAmPmBtn.parent as View).visibility = View.VISIBLE
-            (digitalClockBtn.getChildAt(0) as ImageView).setImageDrawable(context?.let {
+            (clockCountModeBtn.getChildAt(0) as ImageView).setImageDrawable(context?.let {
                 ContextCompat.getDrawable(
                     it, R.drawable.icon_hour_12
                 )
@@ -452,15 +471,6 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
         var numberFormat = DecimalFormat("00")
         hourTextView.text = numberFormat.format(pagesData.getPage().clockData.getHour())
         minuteTextView.text = numberFormat.format(pagesData.getPage().clockData.getMinute())
-    }
-
-    private fun setPageState(state: PageData.PageState) {
-        pagesData.pageState = state
-        pagesData.notifyChange(true)
-    }
-
-    private fun setAmPageData(b: Boolean) {
-        pagesData.getPage().clockData.time.am = b
     }
 
     private fun updateViewsColor() {
@@ -484,12 +494,12 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
             acceptBtn.setTextColor(it)
             pageStateChangeBtn.setTextColor(it)
             radioAmPmBtn.setTextColors(it)
+            (clockCountModeBtn.getChildAt(0) as ImageView).setColorFilter(it)
         }
         pagesData.uiColorData.timeTextColor.let {
             hourTextView.setTextColor(it)
             minuteTextView.setTextColor(it)
             centerTimeText.setTextColor(it)
-            minuteTextView.setTextColor(it)
             hourTitleTextView.setTextColor(it)
             minuteTitleTextView.setTextColor(it)
         }
@@ -548,7 +558,7 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         bottomSheetBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
         setViewsById(view)
-        setViewsAction(view)
+        setViewsAction()
         setLiveDataObserves()
     }
 
@@ -578,7 +588,15 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
 
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun setViewsAction(view: View) {
+    private fun setViewsAction() {
+        clockAnalogDigitalModeChangeBtn.setOnClickListener {
+            if (pagesData.digitalAnalogClockMode == Analog)
+                pagesData.digitalAnalogClockMode = Digital
+            else
+                pagesData.digitalAnalogClockMode = Analog
+            pagesData.notifyChange(true)
+        }
+
         pageStateChangeBtn.setOnClickListener {
             pagesData.let {
                 if (it.pageState == PageData.PageState.START)
@@ -588,7 +606,7 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
                 it.notifyChange(true)
             }
         }
-        digitalClockBtn.setOnClickListener {
+        clockCountModeBtn.setOnClickListener {
             var set24 = pagesData.getPage().clockData.timeCountMode != PageData.TimeCountMode.Mode24
             set24Hour(set24)
         }
@@ -655,7 +673,7 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
         radialTimePickerView = view.findViewById<RadialTimePickerView>(R.id.radial_time_picker_2)
         bottomSheetBack = view.findViewById<ConstraintLayout>(R.id.bottom_sheet_back)
         pageStateChangeBtn = view.findViewById(R.id.page_state_change_btn)
-        digitalClockBtn = view.findViewById<FrameLayout>(R.id.digit_clock_btn)
+        clockCountModeBtn = view.findViewById<FrameLayout>(R.id.clock_count_mode_btn)
         minuteTextView = view.findViewById<TextView>(R.id.minute_text)
         hourTextView = view.findViewById<TextView>(R.id.hour_text)
         radioAmPmBtn = view.findViewById<RoundRadioGroup>(R.id.pm_am_ratio_btn)
@@ -671,6 +689,7 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
         radioCardView = view.findViewById<CardView>(R.id.radio_card_view)
         hourTitleTextView = view.findViewById<TextView>(R.id.hour_title_text)
         minuteTitleTextView = view.findViewById<TextView>(R.id.minute_title_text)
+        clockAnalogDigitalModeChangeBtn = view.findViewById<FrameLayout>(R.id.clock_analog_digit_mode_btn)
 //        numberPicker.maxValue = 1
 //        numberPicker.minValue = 0
 //        numberPicker.value = 0

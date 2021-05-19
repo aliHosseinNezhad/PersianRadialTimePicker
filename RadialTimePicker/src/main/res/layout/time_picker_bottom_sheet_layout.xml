@@ -196,7 +196,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintWidth_percent="0.85" />
                 <FrameLayout
-                    android:id="@+id/digit_clock_btn"
+                    android:id="@+id/clock_count_mode_btn"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_marginBottom="8dp"
@@ -205,10 +205,30 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/guideline4"
+                    app:layout_constraintStart_toEndOf="@+id/clock_layout_right_guideline"
                     app:layout_constraintWidth_percent="0.1">
                     <ImageView
-                        android:id="@+id/clock_mode_btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerInside"
+                        android:scaleX="0.5"
+                        android:scaleY="0.5"
+                        android:src="@drawable/icon_hour_12"
+                        app:tint="@color/white" />
+                </FrameLayout>
+                <FrameLayout
+                    android:id="@+id/clock_analog_digit_mode_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/dark_selected_radio_btn"
+                    app:backgroundTint="@color/dark_teal_200"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toStartOf="@id/clock_layout_left_guideline"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintWidth_percent="0.1">
+                    <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerInside"
@@ -218,11 +238,17 @@
                         app:tint="@color/white" />
                 </FrameLayout>
                 <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline4"
+                    android:id="@+id/clock_layout_right_guideline"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     app:layout_constraintGuide_percent="0.80" />
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/clock_layout_left_guideline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.20" />
             </androidx.constraintlayout.widget.ConstraintLayout>
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/accept_btn"

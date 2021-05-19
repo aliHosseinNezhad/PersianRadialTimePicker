@@ -21,7 +21,8 @@ class MainActivity : AppCompatActivity()
     fun onClick(view: View)
     {
         timePickerBottomSheetFragment.let {
-//            darkMode(it)
+            darkMode(it)
+            it.setButtonsRippleColor(Color.rgb(190,20,170))
             it.setTextTypeFace(ResourcesCompat.getFont(this,R.font.dana_fanu_light))
             it.setOnTimeResultListener { successful, startHour, startMinute, endHour, endMinute ->
                 Toast.makeText(this,
@@ -36,8 +37,6 @@ class MainActivity : AppCompatActivity()
     fun darkMode(it: TimePickerBottomSheetFragment) {
         var textColors = Color.rgb(220, 220, 230)
         var secondaryColor = Color.rgb(90, 90, 90)
-
-
 
         it.setTimeCardViewColor(Color.rgb(50, 50, 50))
         it.setBackgroundColor(Color.rgb(50, 50, 50))
