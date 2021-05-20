@@ -1,4 +1,4 @@
-package com.arappmain.radialtimepicker.DigitalTimePicker
+package com.arappmain.radialtimepicker.digitalTimePicker
 
 import android.content.Context
 import android.graphics.Color
@@ -13,9 +13,9 @@ import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.MATCH_PARE
 import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
 import androidx.constraintlayout.widget.Guideline
 import com.arappmain.radialtimepicker.AnimCountDownTimer
-import com.arappmain.radialtimepicker.DigitalTimePicker.Pickers.AmPmPicker
-import com.arappmain.radialtimepicker.DigitalTimePicker.Pickers.CustomNumberPicker
-import com.arappmain.radialtimepicker.DigitalTimePicker.Pickers.HourPicker
+import com.arappmain.radialtimepicker.digitalTimePicker.Pickers.AmPmPicker
+import com.arappmain.radialtimepicker.digitalTimePicker.Pickers.CustomNumberPicker
+import com.arappmain.radialtimepicker.digitalTimePicker.Pickers.HourPicker
 import com.arappmain.radialtimepicker.R
 import kotlin.math.PI
 import kotlin.math.cos
@@ -26,7 +26,11 @@ class DigitalTimePicker @JvmOverloads constructor(
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
 
-
+    var minute: Int = 0
+    set(value) {
+        field = value
+        initViews()
+    }
     private lateinit var leftDivider: View
     private lateinit var rightDivider: View
     private var content: View = LayoutInflater.from(context).inflate(
@@ -64,20 +68,22 @@ class DigitalTimePicker @JvmOverloads constructor(
     private var transparency = 100
     private var textColor: Int = 0
     private var dividerColor = 0
-    private  var selectedTextColor = Color.rgb(100, 100, 100)
-        set(value){
+    private var selectedTextColor = Color.rgb(100, 100, 100)
+        set(value) {
             field = value
             initViews()
         }
-    fun setInitSecondaryColorWith(primaryColor:Int){
+
+    fun setInitSecondaryColorWith(primaryColor: Int) {
         val A: Int = primaryColor shr 24 and 0xff
         val R: Int = primaryColor shr 16 and 0xff
         val G: Int = primaryColor shr 8 and 0xff
         val B: Int = primaryColor and 0xff
-        dividerColor = Color.argb((transparency*0.3f).toInt(), R, G, B)
+        dividerColor = Color.argb((transparency * 0.3f).toInt(), R, G, B)
         textColor = Color.argb(transparency, R, G, B)
     }
-    var background = Color.rgb(253, 252, 250)
+
+    var background = Color.rgb(240, 240, 245)
         set(value) {
             field = value
             initViews()
@@ -89,15 +95,18 @@ class DigitalTimePicker @JvmOverloads constructor(
         }
     var is24Mode: Boolean = true
         set(value) {
-            field = value
-            if (!value) {
-                hideAnimation.cancel()
-                showAnimation.start()
-            } else {
-                hideAnimation.start()
-                showAnimation.cancel()
+            if (field != value) {
+                field = value
+                if (!value) {
+                    hideAnimation.cancel()
+                    showAnimation.start()
+                } else {
+                    hideAnimation.start()
+                    showAnimation.cancel()
+                }
+                initViews()
             }
-            initViews()
+
         }
 
     var isAm = true
@@ -161,6 +170,7 @@ class DigitalTimePicker @JvmOverloads constructor(
     private fun initAmPmPicker() {
         typeface?.let {
             amPmPicker.typeface = it
+            amPmPicker.setSelectedTypeface(it)
         }
         amPmPicker.fadingEdgeStrength = this.edgeFadingStrength
         amPmPicker.isAm = isAm
@@ -173,6 +183,7 @@ class DigitalTimePicker @JvmOverloads constructor(
     private fun initHourPicker() {
         typeface?.let {
             hourPicker.typeface = it
+            hourPicker.setSelectedTypeface(it)
         }
         hourPicker.fadingEdgeStrength = this.edgeFadingStrength
         hourPicker.setIs24(is24Mode)
@@ -185,11 +196,12 @@ class DigitalTimePicker @JvmOverloads constructor(
     private fun initMinutePicker() {
         typeface?.let {
             minutePicker.typeface = it
+            minutePicker.setSelectedTypeface(it)
         }
         minutePicker.fadingEdgeStrength = this.edgeFadingStrength
         minutePicker.minValue = 0
         minutePicker.maxValue = 59
-        minutePicker.value = 1
+        minutePicker.value = minute
         minutePicker.textColor = textColor
         minutePicker.selectedTextColor = selectedTextColor
         minutePicker.formatter = CustomNumberPicker.Formatter {

@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
-import com.arappmain.radialtimepicker.DigitalTimePicker.DigitalTimePicker
+import com.arappmain.radialtimepicker.digitalTimePicker.DigitalTimePicker
 import com.arappmain.radialtimepicker.RadialTimePickerColors
 import com.arappmain.radialtimepicker.TimePickerBottomSheetFragment
 
@@ -21,22 +21,22 @@ class MainActivity : AppCompatActivity() {
 
     fun onClick(view: View)
     {
-        digitalTimePicker.is24Mode = !digitalTimePicker.is24Mode
+//        digitalTimePicker.is24Mode = !digitalTimePicker.is24Mode
 
 
-//        timePickerBottomSheetFragment.let {
+        timePickerBottomSheetFragment.let {
 //            darkMode(it)
-//            it.setButtonsRippleColor(Color.rgb(190, 20, 170))
-//            it.setTextTypeFace(ResourcesCompat.getFont(this, R.font.dana_fanu_light))
-//            it.setOnTimeResultListener { successful, startHour, startMinute, endHour, endMinute ->
-//                Toast.makeText(
-//                    this,
-//                    "You Complete This activity and $successful \n Open Time: $startHour:$startMinute \n Close Time: $endHour:$endMinute",
-//                    Toast.LENGTH_LONG
-//                ).show()
-//            }
-//            it.show(supportFragmentManager, null)
-//        }
+            it.setButtonsRippleColor(Color.rgb(190, 20, 170))
+            it.setTextTypeFace(ResourcesCompat.getFont(this, R.font.dana_fanu_light))
+            it.setOnTimeResultListener { successful, startHour, startMinute, endHour, endMinute ->
+                Toast.makeText(
+                    this,
+                    "You Complete This activity and $successful \n Open Time: $startHour:$startMinute \n Close Time: $endHour:$endMinute",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            it.show(supportFragmentManager, null)
+        }
     }
 
 

@@ -1,7 +1,6 @@
-package com.arappmain.radialtimepicker.DigitalTimePicker.Pickers
+package com.arappmain.radialtimepicker.digitalTimePicker.Pickers
 
 import android.content.Context
-import android.graphics.Color
 import android.util.AttributeSet
 
 class AmPmPicker @JvmOverloads constructor(
@@ -14,7 +13,7 @@ class AmPmPicker @JvmOverloads constructor(
     var isAm: Boolean = true
         set(value) {
             field = value
-            this.value  = if (value) min else max
+//            this.value  = if (value) min else max
             initView()
         }
         get() = (value == min)
@@ -37,6 +36,7 @@ class AmPmPicker @JvmOverloads constructor(
     fun initView() {
         this.minValue = min
         this.maxValue = max
+        this.smoothScrollToPosition(if (isAm) min else max)
         this.setAutoTextSize(true,maxTextLength)
         this.formatter = Formatter {
             return@Formatter if (it == 0) amText else pmText

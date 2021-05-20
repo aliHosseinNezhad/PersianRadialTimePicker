@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:layout_margin="16dp">
 
-        <com.arappmain.radialtimepicker.DigitalTimePicker.Pickers.AmPmPicker
+        <com.arappmain.radialtimepicker.digitalTimePicker.Pickers.AmPmPicker
             android:id="@+id/digital_time_picker_am_pm_picker"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -32,7 +32,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">
-            <com.arappmain.radialtimepicker.DigitalTimePicker.Pickers.HourPicker
+            <com.arappmain.radialtimepicker.digitalTimePicker.Pickers.HourPicker
                 android:id="@+id/digital_time_picker_hour_picker"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -43,7 +43,7 @@
                 app:np_dividerColor="@android:color/transparent"
                 app:np_maxTextLength="2" />
 
-            <com.arappmain.radialtimepicker.DigitalTimePicker.Pickers.CustomNumberPicker
+            <com.arappmain.radialtimepicker.digitalTimePicker.Pickers.CustomNumberPicker
                 android:id="@+id/digital_time_picker_minute_picker"
                 android:layout_width="0dp"
                 android:layout_height="0dp"

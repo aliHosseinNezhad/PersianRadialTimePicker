@@ -1,4 +1,4 @@
-package com.arappmain.radialtimepicker.DigitalTimePicker
+package com.arappmain.radialtimepicker.digitalTimePicker
 
 import android.annotation.SuppressLint
 import android.content.Context

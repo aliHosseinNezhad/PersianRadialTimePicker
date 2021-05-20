@@ -1,4 +1,4 @@
-package com.arappmain.radialtimepicker.DigitalTimePicker;
+package com.arappmain.radialtimepicker.digitalTimePicker;
 
 import android.content.Context;
 import android.hardware.SensorManager;

@@ -1,4 +1,4 @@
-package com.arappmain.radialtimepicker.DigitalTimePicker.Pickers
+package com.arappmain.radialtimepicker.digitalTimePicker.Pickers
 
 import android.content.Context
 import android.util.AttributeSet
@@ -64,6 +64,7 @@ class HourPicker @JvmOverloads constructor(
     fun initView() {
         this.minValue = data.mode().min
         this.maxValue = data.mode().max
+        this.value = data.mode().value
         this.setAutoTextSize(true, maxTextLength)
         this.formatter = Formatter {
             return@Formatter timeFormatter(it)

@@ -22,6 +22,7 @@ import com.arappmain.radialtimepicker.PageData.ClockAnalogDigitalMode.Analog
 import com.arappmain.radialtimepicker.PageData.ClockAnalogDigitalMode.Digital
 import com.arappmain.radialtimepicker.PageData.ClockArrow.Hour
 import com.arappmain.radialtimepicker.PageData.ClockArrow.Minute
+import com.arappmain.radialtimepicker.digitalTimePicker.DigitalTimePicker
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -213,13 +214,14 @@ class UiColorData {
                 intArrayOf(android.R.attr.state_selected)
             ),
             intArrayOf(
-                rippleColor?:background,
+                rippleColor ?: background,
                 secondaryColor,
                 secondaryColor,
-                rippleColor?:background
+                rippleColor ?: background
             )
         )
     }
+
     var timeCardViewColor: Int = Color.WHITE
     var rippleColor: Int? = null
     var timeTextColor: Int = Color.rgb(100, 100, 100)
@@ -263,6 +265,8 @@ interface SetViewsText {
 }
 
 class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
+
+    private lateinit var digitalTimePicker: DigitalTimePicker
 
     //views
     private lateinit var clockAnalogDigitalModeChangeBtn: FrameLayout
@@ -394,10 +398,11 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
         pagesData.notifyChange(true)
     }
 
-    fun setButtonsRippleColor(color: Int){
+    fun setButtonsRippleColor(color: Int) {
         pagesData.uiColorData.rippleColor = color
         pagesData.notifyChange(true)
     }
+
     private fun setPageState(state: PageData.PageState) {
         pagesData.pageState = state
         pagesData.notifyChange(true)
@@ -427,6 +432,9 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
 
     private fun updateViewsByAnimation() {
         updateNonAnimationViews()
+        digitalTimePicker.isAm = pagesData.getPage().clockData.time.am
+        digitalTimePicker.hour = pagesData.getPage().clockData.getHour()
+        digitalTimePicker.minute = pagesData.getPage().clockData.getMinute()
         getRadialTimePickerValue().let {
             radialTimePickerView.setTime(it.time, it.clockMode)
         }
@@ -439,19 +447,23 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
     private fun updateNonAnimationViews() {
         updateViewsColor()
         updateTexts()
-        if(pagesData.digitalAnalogClockMode == Analog){
+        if (pagesData.digitalAnalogClockMode == Analog) {
             radialTimePickerView.visibility = View.VISIBLE
-        } else{
+            digitalTimePicker.visibility = View.GONE
+        } else {
+            digitalTimePicker.visibility = View.VISIBLE
             radialTimePickerView.visibility = View.GONE
         }
         if (pagesData.getPage().clockData.timeCountMode == PageData.TimeCountMode.Mode24) {
             (radioAmPmBtn.parent as View).visibility = View.GONE
+            digitalTimePicker.is24Mode = true
             (clockCountModeBtn.getChildAt(0) as ImageView).setImageDrawable(context?.let {
                 ContextCompat.getDrawable(
                     it, R.drawable.clock_24_count_mode
                 )
             })
         } else {
+            digitalTimePicker.is24Mode = false
             (radioAmPmBtn.parent as View).visibility = View.VISIBLE
             (clockCountModeBtn.getChildAt(0) as ImageView).setImageDrawable(context?.let {
                 ContextCompat.getDrawable(
@@ -459,13 +471,13 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
                 )
             })
         }
-        if (pagesData.digitalAnalogClockMode == Analog){
+        if (pagesData.digitalAnalogClockMode == Analog) {
             (clockAnalogDigitalModeChangeBtn.getChildAt(0) as ImageView).setImageDrawable(context?.let {
                 ContextCompat.getDrawable(
                     it, R.drawable.analog_clock
                 )
             })
-        }else{
+        } else {
             (clockAnalogDigitalModeChangeBtn.getChildAt(0) as ImageView).setImageDrawable(context?.let {
                 ContextCompat.getDrawable(
                     it, R.drawable.digital_clock
@@ -593,6 +605,7 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
                 centerTimeText.typeface = it
                 minuteTitleTextView.typeface = it
                 hourTitleTextView.typeface = it
+                digitalTimePicker.typeface = it
             }
         }
         pagesData.uiColorData.radialTimePickerColors.observe(viewLifecycleOwner) {
@@ -703,7 +716,10 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
         radioCardView = view.findViewById<CardView>(R.id.radio_card_view)
         hourTitleTextView = view.findViewById<TextView>(R.id.hour_title_text)
         minuteTitleTextView = view.findViewById<TextView>(R.id.minute_title_text)
-        clockAnalogDigitalModeChangeBtn = view.findViewById<FrameLayout>(R.id.clock_analog_digit_mode_btn)
+        clockAnalogDigitalModeChangeBtn =
+            view.findViewById<FrameLayout>(R.id.clock_analog_digit_mode_btn)
+        digitalTimePicker =
+            view.findViewById<DigitalTimePicker>(R.id.time_picker_digital_time_picker)
 //        numberPicker.maxValue = 1
 //        numberPicker.minValue = 0
 //        numberPicker.value = 0
