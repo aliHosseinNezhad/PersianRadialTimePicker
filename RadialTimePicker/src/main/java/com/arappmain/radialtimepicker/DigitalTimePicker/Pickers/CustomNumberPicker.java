@@ -1,4 +1,4 @@
-package com.arappmain.radialtimepicker.DigitalTimePicker;
+package com.arappmain.radialtimepicker.DigitalTimePicker.Pickers;
 
 
 import android.content.Context;
@@ -40,6 +40,7 @@ import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
 
 
+import com.arappmain.radialtimepicker.DigitalTimePicker.Scroller;
 import com.arappmain.radialtimepicker.R;
 
 import java.lang.annotation.Retention;

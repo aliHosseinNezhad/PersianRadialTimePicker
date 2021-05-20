@@ -2,48 +2,121 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/digital_time_picker_card_view"
     xmlns:tools="http://schemas.android.com/tools"
     tools:layout_height="300dp"
+    app:cardCornerRadius="32dp"
+    android:layout_margin="2dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <com.arappmain.radialtimepicker.DigitalTimePicker.CustomNumberPicker
+        android:layout_height="match_parent"
+        android:layout_margin="16dp">
+
+        <com.arappmain.radialtimepicker.DigitalTimePicker.Pickers.AmPmPicker
+            android:id="@+id/digital_time_picker_am_pm_picker"
             android:layout_width="0dp"
-            app:np_maxTextLength="3"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/digital_time_picker_left_guideline"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_height="match_parent"/>
-        <com.arappmain.radialtimepicker.DigitalTimePicker.CustomNumberPicker
+            app:np_dividerColor="@android:color/transparent"
+            app:np_maxTextLength="2" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+
             android:layout_width="0dp"
-            app:np_maxTextLength="3"
-            app:layout_constraintStart_toEndOf="@id/digital_time_picker_right_guideline"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_height="match_parent"/>
-        <com.arappmain.radialtimepicker.DigitalTimePicker.CustomNumberPicker
-            android:layout_width="0dp"
-            app:np_maxTextLength="3"
+            android:layout_height="0dp"
             app:layout_constraintStart_toEndOf="@id/digital_time_picker_left_guideline"
-            app:layout_constraintEnd_toStartOf="@id/digital_time_picker_right_guideline"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+            <com.arappmain.radialtimepicker.DigitalTimePicker.Pickers.HourPicker
+                android:id="@+id/digital_time_picker_hour_picker"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/digital_time_picker_right_guideline"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:np_dividerColor="@android:color/transparent"
+                app:np_maxTextLength="2" />
+
+            <com.arappmain.radialtimepicker.DigitalTimePicker.Pickers.CustomNumberPicker
+                android:id="@+id/digital_time_picker_minute_picker"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/digital_time_picker_right_guideline"
+                app:layout_constraintTop_toTopOf="parent"
+                app:np_dividerColor="@android:color/transparent"
+                app:np_maxTextLength="2" />
+            <View
+                android:id="@+id/digital_time_picker_right_divider"
+                app:layout_constraintHeight_percent="0.95"
+                android:background="#16000000"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="@id/digital_time_picker_right_guideline"
+                app:layout_constraintEnd_toEndOf="@id/digital_time_picker_right_guideline"
+                android:layout_width="1dp"
+                android:layout_height="0dp"/>
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/digital_time_picker_right_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+        <View
+
+            app:layout_constraintHeight_percent="0.95"
+            android:background="#0F000000"
+            android:id="@+id/digital_time_picker_left_divider"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_height="match_parent"/>
+            app:layout_constraintStart_toStartOf="@id/digital_time_picker_left_guideline"
+            app:layout_constraintEnd_toEndOf="@id/digital_time_picker_left_guideline"
+            android:layout_width="1dp"
+            android:layout_height="0dp"/>
+<!--        <TextView-->
+<!--            android:gravity="center"-->
+<!--            app:layout_constraintBottom_toBottomOf="@id/digital_time_picker_top_guideline"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:layout_constraintEnd_toStartOf="@id/digital_time_picker_right_guideline"-->
+<!--            app:layout_constraintStart_toEndOf="@id/digital_time_picker_left_guideline"-->
+<!--            android:text="ساعت"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"/>-->
+<!--        <TextView-->
+<!--            android:gravity="center"-->
+<!--            app:layout_constraintBottom_toBottomOf="@id/digital_time_picker_top_guideline"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toEndOf="@id/digital_time_picker_right_guideline"-->
+<!--            android:text="دقیقه"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"/>-->
+
+
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/digital_time_picker_left_guideline"
             android:layout_width="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.25"
-            android:layout_height="wrap_content"/>
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/digital_time_picker_right_guideline"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.63" />
+            app:layout_constraintGuide_percent="0.25" />
+
+
+<!--        <androidx.constraintlayout.widget.Guideline-->
+<!--            android:orientation="horizontal"-->
+<!--            app:layout_constraintGuide_percent="0.1"-->
+<!--            android:id="@+id/digital_time_picker_top_guideline"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"/>-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

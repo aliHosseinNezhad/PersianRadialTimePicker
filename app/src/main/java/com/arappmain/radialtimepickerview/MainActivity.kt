@@ -1,64 +1,42 @@
 package com.arappmain.radialtimepickerview
 
 import android.graphics.Color
-import android.graphics.Typeface
-import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
-import com.arappmain.radialtimepicker.DigitalTimePicker.CustomNumberPicker
-import com.arappmain.radialtimepicker.MaterialNumberPicker
+import com.arappmain.radialtimepicker.DigitalTimePicker.DigitalTimePicker
 import com.arappmain.radialtimepicker.RadialTimePickerColors
 import com.arappmain.radialtimepicker.TimePickerBottomSheetFragment
 
-import java.time.format.TextStyle
-
 class MainActivity : AppCompatActivity() {
     private var timePickerBottomSheetFragment = TimePickerBottomSheetFragment()
+    private lateinit var digitalTimePicker: DigitalTimePicker
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-
-
-
-        findViewById<CustomNumberPicker>(R.id.material_number_picker).let {
-            var typeface = ResourcesCompat.getFont(this, R.font.dana_fanu_light)
-            it.textColor = Color.rgb(100, 100, 100)
-            it.minValue = 0
-            it.maxValue = 59
-            it.wheelItemCount = 3
-            it.fadingEdgeStrength = 0.5f
-            it.setAutoTextSize(true,2)
-            it.textSize = 200f
-            it.selectedTextSize = 200f
-            it.setSelectedTypeface(typeface)
-            it.selectedTextColor = Color.rgb(100, 100, 100)
-            it.dividerColor = Color.TRANSPARENT
-            it.typeface = ResourcesCompat.getFont(this, R.font.dana_fanu_light)
-            it.formatter = CustomNumberPicker.Formatter {
-                return@Formatter if (it.toString().length == 2) it.toString() else "0$it"
-            }
-
-        }
+        digitalTimePicker = findViewById<DigitalTimePicker>(R.id.material_number_picker)
     }
 
-    fun onClick(view: View) {
-        timePickerBottomSheetFragment.let {
-            darkMode(it)
-            it.setButtonsRippleColor(Color.rgb(190, 20, 170))
-            it.setTextTypeFace(ResourcesCompat.getFont(this, R.font.dana_fanu_light))
-            it.setOnTimeResultListener { successful, startHour, startMinute, endHour, endMinute ->
-                Toast.makeText(
-                    this,
-                    "You Complete This activity and $successful \n Open Time: $startHour:$startMinute \n Close Time: $endHour:$endMinute",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-            it.show(supportFragmentManager, null)
-        }
+    fun onClick(view: View)
+    {
+        digitalTimePicker.is24Mode = !digitalTimePicker.is24Mode
+
+
+//        timePickerBottomSheetFragment.let {
+//            darkMode(it)
+//            it.setButtonsRippleColor(Color.rgb(190, 20, 170))
+//            it.setTextTypeFace(ResourcesCompat.getFont(this, R.font.dana_fanu_light))
+//            it.setOnTimeResultListener { successful, startHour, startMinute, endHour, endMinute ->
+//                Toast.makeText(
+//                    this,
+//                    "You Complete This activity and $successful \n Open Time: $startHour:$startMinute \n Close Time: $endHour:$endMinute",
+//                    Toast.LENGTH_LONG
+//                ).show()
+//            }
+//            it.show(supportFragmentManager, null)
+//        }
     }
 
 
