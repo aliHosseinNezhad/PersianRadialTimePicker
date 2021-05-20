@@ -8,7 +8,7 @@ This library offers a Radial time picker designed on [Google's Material Design P
 Persian Radial Time Picker via Bottom sheet design. Developed by [@aliHosseinNezhad](https://github.com/aliHosseinNezhad).
 </br>You can customize it in any color and text. we made this very flexible!!
 
-<img src="resources/ezgif.com-gif-maker.gif" height="500" width="300">
+<img src="resources/ezgif.com-gif-maker.gif" height="500" width="330">
 
 12 Hour | 24 Hour
 ---- | ----
