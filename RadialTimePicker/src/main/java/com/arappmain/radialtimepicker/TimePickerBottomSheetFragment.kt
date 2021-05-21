@@ -23,6 +23,8 @@ import com.arappmain.radialtimepicker.PageData.ClockAnalogDigitalMode.Digital
 import com.arappmain.radialtimepicker.PageData.ClockArrow.Hour
 import com.arappmain.radialtimepicker.PageData.ClockArrow.Minute
 import com.arappmain.radialtimepicker.digitalTimePicker.DigitalTimePicker
+import com.arappmain.radialtimepicker.digitalTimePicker.animUtils.AnimUtils
+import com.arappmain.radialtimepicker.digitalTimePicker.animUtils.AnimateUtils
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -30,7 +32,9 @@ import com.google.android.material.button.MaterialButton
 import java.text.DecimalFormat
 import java.util.*
 import java.util.concurrent.TimeoutException
+import kotlin.math.PI
 import kotlin.math.min
+import kotlin.math.sin
 
 
 class RadialTimePickerInputData {
@@ -51,6 +55,8 @@ class PageData {
     var start = PageStateModel()
     var end = PageStateModel()
     var digitalAnalogClockMode = Analog
+    var analogClockPercent = 0.85f
+    var digitalClockPercent = 0.9f
 
     fun getPage() = if (pageState == PageState.START) {
         start
@@ -444,18 +450,72 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
         updateNonAnimationViews()
     }
 
+
+    var radioBtnVisibility = AnimUtils(300).apply {
+        onStart { weight, toExpand ->
+            if (toExpand) {
+                radioCardView.alpha = 0f
+                radioCardView.visibility = View.VISIBLE
+            } else {
+                radioCardView.alpha = 1f
+                radioCardView.visibility = View.VISIBLE
+            }
+        }
+        onRefresh {
+            radioCardView.alpha = it
+        }
+        onEnd { weight, isExpand ->
+            radioCardView.visibility = if (isExpand) View.VISIBLE else View.GONE
+        }
+    }
+    var clockSwitchAnimation = AnimateUtils(1).apply {
+        frame(0, 400) {
+            setVisibilityWithWeight(radialTimePickerView,it,pagesData.analogClockPercent)
+        }.onStart {
+            setVisibilityWithWeight(radialTimePickerView,1f,pagesData.analogClockPercent)
+        }.onEnd {
+            setVisibilityWithWeight(radialTimePickerView,0f,pagesData.analogClockPercent)
+        }.expand = false
+        //--------------
+        frame(400, 800) {
+            setVisibilityWithWeight(digitalTimePicker,it,pagesData.digitalClockPercent)
+        }.onStart {
+            setVisibilityWithWeight(digitalTimePicker,0f,pagesData.digitalClockPercent)
+        }.onEnd {
+            setVisibilityWithWeight(digitalTimePicker,1f,pagesData.digitalClockPercent)
+        }.expand = true
+    }
+
+
+    fun setVisibilityWithWeight(view: View, weight: Float, analogClockPercent: Float) {
+        var layoutParams = (view.layoutParams as ConstraintLayout.LayoutParams)
+        layoutParams.matchConstraintPercentWidth = weight*analogClockPercent
+        view.alpha = weight
+        view.layoutParams = layoutParams
+        if (weight == 0f) {
+            view.visibility = View.GONE
+        } else {
+            view.visibility = View.VISIBLE
+        }
+    }
+
     private fun updateNonAnimationViews() {
         updateViewsColor()
         updateTexts()
+
         if (pagesData.digitalAnalogClockMode == Analog) {
-            radialTimePickerView.visibility = View.VISIBLE
-            digitalTimePicker.visibility = View.GONE
+            if (radialTimePickerView.visibility !=View.VISIBLE){
+                clockSwitchAnimation.start(true)
+            }
         } else {
-            digitalTimePicker.visibility = View.VISIBLE
-            radialTimePickerView.visibility = View.GONE
+            if (digitalTimePicker.visibility !=View.VISIBLE){
+                clockSwitchAnimation.start()
+            }
         }
         if (pagesData.getPage().clockData.timeCountMode == PageData.TimeCountMode.Mode24) {
-            (radioAmPmBtn.parent as View).visibility = View.GONE
+//            (radioAmPmBtn.parent as View).visibility = View.GONE
+            if (radioCardView.visibility == View.VISIBLE)
+                radioBtnVisibility.hide()
             digitalTimePicker.is24Mode = true
             (clockCountModeBtn.getChildAt(0) as ImageView).setImageDrawable(context?.let {
                 ContextCompat.getDrawable(
@@ -464,7 +524,9 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
             })
         } else {
             digitalTimePicker.is24Mode = false
-            (radioAmPmBtn.parent as View).visibility = View.VISIBLE
+//            (radioAmPmBtn.parent as View).visibility = View.VISIBLE
+            if (radioCardView.visibility != View.VISIBLE)
+                radioBtnVisibility.show()
             (clockCountModeBtn.getChildAt(0) as ImageView).setImageDrawable(context?.let {
                 ContextCompat.getDrawable(
                     it, R.drawable.clock_12_count_mode

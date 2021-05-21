@@ -12,14 +12,11 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.MATCH_PARENT
 import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
 import androidx.constraintlayout.widget.Guideline
-import com.arappmain.radialtimepicker.AnimCountDownTimer
 import com.arappmain.radialtimepicker.digitalTimePicker.Pickers.AmPmPicker
 import com.arappmain.radialtimepicker.digitalTimePicker.Pickers.CustomNumberPicker
 import com.arappmain.radialtimepicker.digitalTimePicker.Pickers.HourPicker
 import com.arappmain.radialtimepicker.R
-import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.sin
+import com.arappmain.radialtimepicker.digitalTimePicker.animUtils.AnimUtils
 
 class DigitalTimePicker @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -56,14 +53,15 @@ class DigitalTimePicker @JvmOverloads constructor(
     private lateinit var cardView: CardView
     private lateinit var leftGuideLine: Guideline
     private val leftGuidelinePercent = 0.25f
-
     //animation
     private val interval: Long = 2L
     private val duration: Long = 300L
     private var weight: Float = 1f
-    private val hideAnimation = HideAnimation()
-    private val showAnimation = ShowAnimation()
-
+    private val animUtils = AnimUtils(duration,interval).apply {
+        onRefresh {
+            updateAnimation(it)
+        }
+    }
 
     private var transparency = 100
     private var textColor: Int = 0
@@ -98,11 +96,9 @@ class DigitalTimePicker @JvmOverloads constructor(
             if (field != value) {
                 field = value
                 if (!value) {
-                    hideAnimation.cancel()
-                    showAnimation.start()
+                    animUtils.show()
                 } else {
-                    hideAnimation.start()
-                    showAnimation.cancel()
+                    animUtils.hide()
                 }
                 initViews()
             }
@@ -226,40 +222,4 @@ class DigitalTimePicker @JvmOverloads constructor(
         leftDivider.alpha = weight
         amPmPicker.alpha = weight
     }
-
-    inner class HideAnimation : AnimCountDownTimer(duration, interval) {
-        var tm = 0L
-        var t = 0f
-        var weight = 1f
-        override fun onTick(millisUntilFinished: Long) {
-            tm = duration - millisUntilFinished
-            t = tm / duration.toFloat()
-            weight = cos(t * PI / 2).toFloat()
-            updateAnimation(weight)
-        }
-
-        override fun onFinish() {
-            weight = 0f
-            updateAnimation(weight)
-        }
-    }
-
-    inner class ShowAnimation : AnimCountDownTimer(duration, interval) {
-        var tm = 0L
-        var t = 0f
-        var weight = 0f
-        override fun onTick(millisUntilFinished: Long) {
-            tm = duration - millisUntilFinished
-            t = tm / duration.toFloat()
-            weight = sin(t * PI / 2).toFloat()
-            updateAnimation(weight)
-        }
-
-        override fun onFinish() {
-            weight = 1f
-            updateAnimation(weight)
-        }
-    }
-
-
 }

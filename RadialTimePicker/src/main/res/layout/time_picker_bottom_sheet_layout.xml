@@ -29,7 +29,6 @@
                     android:id="@+id/page_state_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:gravity="center"
                     android:padding="8dp"
                     android:text="زمان شروع"
@@ -182,7 +181,17 @@
                 app:layout_constraintBottom_toTopOf="@id/accept_btn"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
+                <View
+                    android:visibility="gone"
+                    app:layout_constraintDimensionRatio="4:3"
+                    app:layout_constraintBottom_toTopOf="@id/clock_count_mode_btn"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"/>
                 <com.arappmain.radialtimepicker.digitalTimePicker.DigitalTimePicker
+                    android:visibility="gone"
                     android:id="@+id/time_picker_digital_time_picker"
                     app:layout_constraintWidth_percent="0.90"
                     android:layout_width="0dp"
@@ -194,7 +203,7 @@
                     app:layout_constraintBottom_toTopOf="@id/clock_analog_digit_mode_btn"
                     app:layout_constraintDimensionRatio="4:3" />
                 <com.arappmain.radialtimepicker.RadialTimePickerView
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:id="@+id/radial_time_picker_2"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
