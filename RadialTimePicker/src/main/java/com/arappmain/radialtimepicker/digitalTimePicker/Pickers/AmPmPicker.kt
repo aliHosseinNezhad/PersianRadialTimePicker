@@ -8,15 +8,19 @@ class AmPmPicker @JvmOverloads constructor(
 ) : CustomNumberPicker(context, attrs, defStyleAttr) {
     private val min = 0
     private val max = 1
+    init {
+        initView()
+        this.formatter = Formatter {
+            return@Formatter if (it == 0) amText else pmText
+        }
+    }
 
     private var maxTextLength = 2
     var isAm: Boolean = true
         set(value) {
             field = value
-//            this.value  = if (value) min else max
             initView()
         }
-        get() = (value == min)
 
     var amText = "قبل از ظهر"
         set(value) {
@@ -36,12 +40,10 @@ class AmPmPicker @JvmOverloads constructor(
     fun initView() {
         this.minValue = min
         this.maxValue = max
-        this.smoothScrollToPosition(if (isAm) min else max)
+        this.value = if (isAm) min else max
         this.setAutoTextSize(true,maxTextLength)
-        this.formatter = Formatter {
-            return@Formatter if (it == 0) amText else pmText
-        }
     }
+
 
 
 }

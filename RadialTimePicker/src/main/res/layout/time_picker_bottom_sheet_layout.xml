@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/bottom_sheet_behavior">
+    >
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/bottom_sheet_card_back"
         style="@style/CustomCardViewStyle"
@@ -31,7 +31,10 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:padding="8dp"
+                    tools:textColor="@color/black"
+                    android:textStyle="bold"
                     android:text="زمان شروع"
+                    app:autoSizeTextType="uniform"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     android:textColor="@color/white"
                     app:layout_constraintBottom_toTopOf="@id/text_digital_time_card_view"
@@ -129,7 +132,6 @@
                         <TextView
                             android:id="@+id/hour_text"
                             style="@style/clock_text_style"
-
                             app:layout_constraintBottom_toTopOf="@+id/bottom_hour_guid_line"
                             app:layout_constraintEnd_toStartOf="@+id/center_time_text"
                             app:layout_constraintTop_toTopOf="parent"

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="minimum_text_size">
+    <style name="auto_text_size">
         <item name="autoSizeTextType">uniform</item>
         <item name="autoSizeMaxTextSize">15sp</item>
         <item name="autoSizeMinTextSize">1sp</item>
@@ -34,7 +34,7 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
     </style>
-    <style name="buttons_styles" parent="minimum_text_size">
+    <style name="buttons_styles" parent="auto_text_size">
         <item name="backgroundTint">@color/dark_teal_200</item>
         <item name="cornerRadius">36dp</item>
         <item name="rippleColor">@color/teal_200</item>

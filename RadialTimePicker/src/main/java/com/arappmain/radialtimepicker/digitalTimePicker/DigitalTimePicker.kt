@@ -24,10 +24,10 @@ class DigitalTimePicker @JvmOverloads constructor(
 
 
     var minute: Int = 0
-    set(value) {
-        field = value
-        initViews()
-    }
+        set(value) {
+            field = value
+            initViews()
+        }
     private lateinit var leftDivider: View
     private lateinit var rightDivider: View
     private var content: View = LayoutInflater.from(context).inflate(
@@ -53,11 +53,12 @@ class DigitalTimePicker @JvmOverloads constructor(
     private lateinit var cardView: CardView
     private lateinit var leftGuideLine: Guideline
     private val leftGuidelinePercent = 0.25f
+
     //animation
     private val interval: Long = 2L
     private val duration: Long = 300L
     private var weight: Float = 1f
-    private val animUtils = AnimUtils(duration,interval).apply {
+    private val animUtils = AnimUtils(duration, interval).apply {
         onRefresh {
             updateAnimation(it)
         }
@@ -66,7 +67,7 @@ class DigitalTimePicker @JvmOverloads constructor(
     private var transparency = 100
     private var textColor: Int = 0
     private var dividerColor = 0
-    private var selectedTextColor = Color.rgb(100, 100, 100)
+    var secondColor = Color.rgb(100, 100, 100)
         set(value) {
             field = value
             initViews()
@@ -127,7 +128,7 @@ class DigitalTimePicker @JvmOverloads constructor(
             initViews()
         }
 
-    var edgeFadingStrength: Float = 0f
+    var fadingEdgeStrength: Float = 0f
         set(value) {
             field = value
             initViews()
@@ -143,8 +144,45 @@ class DigitalTimePicker @JvmOverloads constructor(
     init {
         addView(content)
         setViewsById()
+        setViewsActions()
         preInit()
         initViews()
+    }
+
+    private fun setViewsActions() {
+        amPmPicker.setOnValueChangedListener { numberPicker, oldVal, newVal ->
+                if (oldVal != newVal) {
+                    onTimeChange(newVal == 0, hourPicker.value, minutePicker.value)
+                }
+        }
+        hourPicker.setOnValueChangedListener { _, oldVal, newVal ->
+            if (oldVal != newVal) {
+                onTimeChange(amPmPicker.value == 0, newVal, minutePicker.value)
+            }
+        }
+        minutePicker.setOnValueChangedListener { _, oldVal, newVal ->
+            if (oldVal != newVal) {
+                onTimeChange(amPmPicker.value == 0, hourPicker.value, newVal)
+            }
+        }
+    }
+
+
+    private fun onTimeChange(amPm: Boolean, hour: Int, minute: Int) {
+        onTimeChangeListenerParam?.let { it(amPm, hour, minute) }
+        onTimeChangeListener?.onTimeChange(amPm, hour, minute)
+    }
+
+    fun setOnTimeChangeListener(onTimeChangeListener: OnTimeChangeListener) {}
+    private var onTimeChangeListener: OnTimeChangeListener? = null
+
+    interface OnTimeChangeListener {
+        fun onTimeChange(amPm: Boolean, hour: Int, minute: Int)
+    }
+
+    private var onTimeChangeListenerParam: ((Boolean, Int, Int) -> Unit)? = null
+    fun setOnTimeChangeListener(param: (Boolean, Int, Int) -> Unit) {
+        onTimeChangeListenerParam = param
     }
 
     private fun preInit() {
@@ -154,7 +192,7 @@ class DigitalTimePicker @JvmOverloads constructor(
     }
 
     private fun initViews() {
-        setInitSecondaryColorWith(selectedTextColor)
+        setInitSecondaryColorWith(secondColor)
         leftDivider.background = ColorDrawable(dividerColor)
         rightDivider.background = ColorDrawable(dividerColor)
         cardView.setCardBackgroundColor(background)
@@ -168,10 +206,10 @@ class DigitalTimePicker @JvmOverloads constructor(
             amPmPicker.typeface = it
             amPmPicker.setSelectedTypeface(it)
         }
-        amPmPicker.fadingEdgeStrength = this.edgeFadingStrength
+        amPmPicker.fadingEdgeStrength = this.fadingEdgeStrength
         amPmPicker.isAm = isAm
         amPmPicker.textColor = textColor
-        amPmPicker.selectedTextColor = selectedTextColor
+        amPmPicker.selectedTextColor = secondColor
         amPmPicker.amText = amText
         amPmPicker.pmText = pmText
     }
@@ -181,11 +219,11 @@ class DigitalTimePicker @JvmOverloads constructor(
             hourPicker.typeface = it
             hourPicker.setSelectedTypeface(it)
         }
-        hourPicker.fadingEdgeStrength = this.edgeFadingStrength
+        hourPicker.fadingEdgeStrength = this.fadingEdgeStrength
         hourPicker.setIs24(is24Mode)
         hourPicker.setHour(hour)
         hourPicker.textColor = textColor
-        hourPicker.selectedTextColor = selectedTextColor
+        hourPicker.selectedTextColor = secondColor
 
     }
 
@@ -194,12 +232,12 @@ class DigitalTimePicker @JvmOverloads constructor(
             minutePicker.typeface = it
             minutePicker.setSelectedTypeface(it)
         }
-        minutePicker.fadingEdgeStrength = this.edgeFadingStrength
+        minutePicker.fadingEdgeStrength = this.fadingEdgeStrength
         minutePicker.minValue = 0
         minutePicker.maxValue = 59
         minutePicker.value = minute
         minutePicker.textColor = textColor
-        minutePicker.selectedTextColor = selectedTextColor
+        minutePicker.selectedTextColor = secondColor
         minutePicker.formatter = CustomNumberPicker.Formatter {
             return@Formatter timeFormatter(it)
         }

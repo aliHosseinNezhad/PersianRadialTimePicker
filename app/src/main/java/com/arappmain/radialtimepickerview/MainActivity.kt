@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
 
 
         timePickerBottomSheetFragment.let {
-//            darkMode(it)
+            darkMode(it)
             it.setButtonsRippleColor(Color.rgb(190, 20, 170))
             it.setTextTypeFace(ResourcesCompat.getFont(this, R.font.dana_fanu_light))
             it.setOnTimeResultListener { successful, startHour, startMinute, endHour, endMinute ->
@@ -50,6 +50,7 @@ class MainActivity : AppCompatActivity() {
         it.setSecondaryColor(Color.rgb(90, 90, 90))
         it.setRadialTimePickerColors(RadialTimePickerColors().also {
             it.textsColors = textColors
+            it.clockNumberBackColor = Color.rgb(60, 60, 60)
             it.selectorColor = secondaryColor
             it.selectorTextColor = textColors
             it.clockBackColor = Color.rgb(60, 60, 60)

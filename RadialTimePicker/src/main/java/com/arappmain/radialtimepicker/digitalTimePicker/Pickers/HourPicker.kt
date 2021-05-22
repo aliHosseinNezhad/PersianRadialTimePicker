@@ -7,15 +7,18 @@ class HourPicker @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : CustomNumberPicker(context, attrs, defStyleAttr) {
 
-    private val min = 0
-    private val max = 1
     var data = Data()
-    fun timeFormatter(time:Int): String {
-        return if (time/10 == 0){
+    fun timeFormatter(time: Int): String {
+        return if (time / 10 == 0) {
             "0$time"
         } else time.toString()
     }
+
     class Data {
+        var hour: Int = 0
+            set(value) {
+                field = value
+            }
         var mode12 = Mode12()
         var mode24 = Mode24()
         var is24Hour = true
@@ -23,26 +26,20 @@ class HourPicker @JvmOverloads constructor(
             return if (is24Hour) mode24 else mode12
         }
 
-        fun setHour(hour: Int) {
-            if (hour in mode().max..mode().max){
-                mode().value = hour
-            }
-        }
 
         class Mode12 : Mode() {
-            override val max = 12
-            override val min = 1
+            override val max = 11
+            override val min = 0
         }
 
         class Mode24 : Mode() {
-            override val max = 24
-            override val min = 1
+            override val max = 23
+            override val min = 0
         }
 
         open class Mode {
             open val max = 0
             open val min = 0
-            var value:Int = 0
         }
     }
 
@@ -51,23 +48,33 @@ class HourPicker @JvmOverloads constructor(
     fun is24(): Boolean {
         return data.is24Hour
     }
+
     fun setIs24(is24: Boolean) {
         data.is24Hour = is24
         initView()
     }
-    fun setHour(hour:Int){
-        data.setHour(hour)
+
+    fun setHour(hour: Int) {
+        data.hour = hour
         initView()
     }
 
+    init {
+        setIs24(true)
+    }
 
     fun initView() {
         this.minValue = data.mode().min
         this.maxValue = data.mode().max
-        this.value = data.mode().value
         this.setAutoTextSize(true, maxTextLength)
+        this.value = data.hour
         this.formatter = Formatter {
-            return@Formatter timeFormatter(it)
+            return@Formatter timeFormatter(
+                if (it == 0) {
+                    if (data.is24Hour) 24 else 12
+                } else it
+            )
         }
+
     }
 }
