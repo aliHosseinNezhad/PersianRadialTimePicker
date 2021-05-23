@@ -5,22 +5,47 @@
 [![](https://jitpack.io/v/osameh15/PersianRadialTimePicker.svg)](https://jitpack.io/#osameh15/PersianRadialTimePicker)
 
 This library offers a Radial time picker designed on [Google's Material Design Principals For Pickers](http://www.google.com/design/spec/components/pickers.html) for Android 4.4 (API 19) +.
-Persian Radial Time Picker via Bottom sheet design. Developed by [@aliHosseinNezhad](https://github.com/aliHosseinNezhad).
+Persian Radial Time Picker via Bottom sheet design.
 </br>You can customize it in any color and text. we made this very flexible!!
 
-<img src="resources/ezgif.com-gif-maker.gif" height="500" width="330">
-
-12 Hour | 24 Hour
----- | ----
-![12 Hour](https://github.com/osameh15/PersianRadialTimePicker/blob/main/resources/12hour.png) | ![24 Hour](https://github.com/osameh15/PersianRadialTimePicker/blob/main/resources/24hour.png)
-
+<img src="resources/time_picker.gif" height="500" width="300">
+<table>
+  <tr>
+        <th>Attribute</th>
+        <th>Analog</th>
+        <th>Digital</th>
+    </tr>
+  <tr>
+    <td>
+      <b>12 Hour</b>
+    </td>
+    <td>
+        <img src="resources/12hour_1.png" width="300" height="480">
+    </td>
+    <td>
+        <img src="resources/12hour.png" width="300" height="480">
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <b>24 Hour</b>
+    </td>
+    <td>
+        <img src="resources/24hour_1.png" width="300" height="480">
+    </td>
+    <td>
+        <img src="resources/24hour.png" width="300" height="480">
+    </td>
+  </tr>
+</table>
+</br>
 You can report any issue on issues page. Note: If you speak Persian, you can submit issues with Persian (Farsi) language and I will check them. :)
 
 ## Contents
 
 - [Installation](#installation)
 - [How to use](#how-to-use)
-- [changing style](#changing-style)
+- [Configuration](#configuration)
 - [Bugs and feedback](#bugs-and-feedback)
 - [Credits](#credits)
 - [License](#license)
@@ -30,7 +55,8 @@ You can report any issue on issues page. Note: If you speak Persian, you can sub
 #### Setup
 - Make sure you are using material components in your default AppTheme i.e your AppTheme inherits from a material theme
 - In project-level build.gradle:
-```groovy
+```
+groovy
   allprojects {
   	repositories {
           // ...
@@ -40,11 +66,11 @@ You can report any issue on issues page. Note: If you speak Persian, you can sub
 ```
 - In your app-level build.gradle file: 
 ```
-implementation 'com.github.aliHosseinNezhad:PersianRadialTimePicker:1.3.0'
+implementation 'com.github.aliHosseinNezhad:PersianRadialTimePicker:1.3.1'
 ```
 ## How to use
 
-1. You can use Time Picker in activity or fragment
+- You can use Time Picker in activity or fragment
 ### Add to layout
 
     <com.arappmain.radialtimepicker.RadialTimePickerView
@@ -61,7 +87,7 @@ implementation 'com.github.aliHosseinNezhad:PersianRadialTimePicker:1.3.0'
                     app:layout_constraintWidth_percent="0.85"
                     app:text_typeface="@font/dana_fanu_light" />
  
-2. Bottom sheet dialog: Time Picer 
+- Bottom sheet dialog: Time Picer 
 ```
 private var timePickerBottomSheetFragment = TimePickerBottomSheetFragment()
         timePickerBottomSheetFragment.let {
@@ -73,8 +99,8 @@ private var timePickerBottomSheetFragment = TimePickerBottomSheetFragment()
         }
  ```
  
-### changing style
-  you can change color of views by the folowing way:
+## Configuration
+- Change color of views by the folowing way:
  ```  
  fun darkMode(it: TimePickerBottomSheetFragment) {
         var textColors = Color.rgb(220, 220, 230)
@@ -94,7 +120,7 @@ private var timePickerBottomSheetFragment = TimePickerBottomSheetFragment()
         it.setTimeTextColors(textColors)
     }
 ``` 
-and change all texts by the folowing method:
+- Change all texts by the folowing method:
 ``` 
   fun englishMode(it: TimePickerBottomSheetFragment) {
       it.setViewsText {
@@ -109,8 +135,6 @@ and change all texts by the folowing method:
       }
   }
  ``` 
- 
- 
 ## Bugs and Feedback
 
 For bugs, feature requests, and discussion please use [GitHub Issues](https://github.com/osameh15/PersianRadialTimePicker/issues)
