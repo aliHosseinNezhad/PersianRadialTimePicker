@@ -81,7 +81,7 @@ private var timePickerBottomSheetFragment = TimePickerBottomSheetFragment()
         var secondaryColor = Color.rgb(90, 90, 90)
         it.setTimeCardViewColor(Color.rgb(50, 50, 50))
         it.setBackgroundColor(Color.rgb(50, 50, 50))
-        it.setSecondaryColor(Color.rgb(90, 90, 90))
+        it.setSecondaryColor(secondaryColor)
         it.setRadialTimePickerColors(RadialTimePickerColors().also {
             it.textsColors = textColors
             it.clockNumberBackColor = Color.rgb(60, 60, 60)
