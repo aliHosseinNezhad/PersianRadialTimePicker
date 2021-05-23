@@ -72,6 +72,44 @@ private var timePickerBottomSheetFragment = TimePickerBottomSheetFragment()
         }
  ```
  
+# changing style
+  you can change color of views by the folowing way:
+ ```  
+ fun darkMode(it: TimePickerBottomSheetFragment) {
+        var textColors = Color.rgb(220, 220, 230)
+        var secondaryColor = Color.rgb(90, 90, 90)
+        it.setTimeCardViewColor(Color.rgb(50, 50, 50))
+        it.setBackgroundColor(Color.rgb(50, 50, 50))
+        it.setSecondaryColor(Color.rgb(90, 90, 90))
+        it.setRadialTimePickerColors(RadialTimePickerColors().also {
+            it.textsColors = textColors
+            it.clockNumberBackColor = Color.rgb(60, 60, 60)
+            it.selectorColor = secondaryColor
+            it.selectorTextColor = textColors
+            it.clockBackColor = Color.rgb(60, 60, 60)
+        })
+        it.setTitleColor(textColors)
+        it.setTextsColors(textColors)
+        it.setTimeTextColors(textColors)
+    }
+``` 
+and change all texts by the folowing method:
+``` 
+  fun englishMode(it: TimePickerBottomSheetFragment) {
+      it.setViewsText {
+          it.amText = "am"
+          it.pmText = "pm"
+          it.acceptText = "ok"
+          it.hourText = "hour"
+          it.minuteText = "minute"
+          it.startTime = "start time"
+          it.endTime = "end time"
+          return@setViewsText it
+      }
+  }
+ ``` 
+ 
+ 
 ## Bugs and Feedback
 
 For bugs, feature requests, and discussion please use [GitHub Issues](https://github.com/osameh15/PersianRadialTimePicker/issues)
