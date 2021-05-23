@@ -20,6 +20,7 @@ You can report any issue on issues page. Note: If you speak Persian, you can sub
 
 - [Installation](#installation)
 - [How to use](#how-to-use)
+- [changing style](#changing-style)
 - [Bugs and feedback](#bugs-and-feedback)
 - [Credits](#credits)
 - [License](#license)
@@ -72,7 +73,7 @@ private var timePickerBottomSheetFragment = TimePickerBottomSheetFragment()
         }
  ```
  
-# changing style
+### changing style
   you can change color of views by the folowing way:
  ```  
  fun darkMode(it: TimePickerBottomSheetFragment) {
