@@ -39,7 +39,7 @@ You can report any issue on issues page. Note: If you speak Persian, you can sub
 ```
 - In your app-level build.gradle file: 
 ```
-implementation 'com.github.aliHosseinNezhad:PersianRadialTimePicker:1.0.2'
+implementation 'com.github.aliHosseinNezhad:PersianRadialTimePicker:1.3.0'
 ```
 ## How to use
 
