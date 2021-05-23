@@ -688,6 +688,7 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
                 minuteTitleTextView.typeface = it
                 hourTitleTextView.typeface = it
                 digitalTimePicker.typeface = it
+                acceptBtn.typeface = it
             }
         }
 
