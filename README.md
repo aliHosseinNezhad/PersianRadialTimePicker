@@ -8,7 +8,7 @@ This library offers a Radial time picker designed on [Google's Material Design P
 Persian Radial Time Picker via Bottom sheet design.
 </br>You can customize it in any color and text. we made this very flexible!!
 
-<img src="resources/time_picker.gif" height="500" width="300">
+<img src="resources/time_picker.gif" height="500" width="270">
 <table>
   <tr>
         <th>Attribute</th>
