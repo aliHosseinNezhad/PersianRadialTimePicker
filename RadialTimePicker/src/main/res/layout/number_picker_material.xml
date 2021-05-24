@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <view xmlns:android="http://schemas.android.com/apk/res/android"
-    class="android.widget.NumberPicker$CustomEditText"
     android:id="@+id/np__numberpicker_input"
+    class="android.widget.NumberPicker$CustomEditText"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@null"
     android:gravity="center"
-    android:importantForAccessibility="no"
     android:hint="@null"
+    android:importantForAccessibility="no"
     android:singleLine="true"
-    android:visibility="invisible"/>
+    android:visibility="invisible" />

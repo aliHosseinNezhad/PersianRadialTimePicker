@@ -530,7 +530,7 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
             digitalTimePicker.is24Mode = true
             (clockCountModeBtn.getChildAt(0) as ImageView).setImageDrawable(context?.let {
                 ContextCompat.getDrawable(
-                    it, R.drawable.clock_24_count_mode
+                    it, R.drawable.clock_12_count_mode
                 )
             })
         } else {
@@ -540,20 +540,20 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
                 radioBtnVisibility.show()
             (clockCountModeBtn.getChildAt(0) as ImageView).setImageDrawable(context?.let {
                 ContextCompat.getDrawable(
-                    it, R.drawable.clock_12_count_mode
+                    it, R.drawable.clock_24_count_mode
                 )
             })
         }
         if (pagesData.digitalAnalogClockMode == Analog) {
             (clockAnalogDigitalModeChangeBtn.getChildAt(0) as ImageView).setImageDrawable(context?.let {
                 ContextCompat.getDrawable(
-                    it, R.drawable.analog_clock
+                    it, R.drawable.digital_clock
                 )
             })
         } else {
             (clockAnalogDigitalModeChangeBtn.getChildAt(0) as ImageView).setImageDrawable(context?.let {
                 ContextCompat.getDrawable(
-                    it, R.drawable.digital_clock
+                    it, R.drawable.analog_clock
                 )
             })
         }
