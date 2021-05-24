@@ -66,7 +66,7 @@ groovy
 ```
 - In your app-level build.gradle file: 
 ```
-implementation 'com.github.aliHosseinNezhad:PersianRadialTimePicker:1.3.1'
+implementation 'com.github.aliHosseinNezhad:PersianRadialTimePicker:1.3.2'
 ```
 ## How to use
 
