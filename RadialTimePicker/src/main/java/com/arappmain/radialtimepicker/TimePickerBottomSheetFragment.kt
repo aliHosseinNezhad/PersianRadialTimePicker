@@ -23,7 +23,10 @@ import com.arappmain.radialtimepicker.PageData.ClockArrow.Hour
 import com.arappmain.radialtimepicker.PageData.ClockArrow.Minute
 import com.arappmain.radialtimepicker.digitalTimePicker.DigitalTimePicker
 import com.arappmain.radialtimepicker.digitalTimePicker.animUtils.AnimUtils
-import com.arappmain.radialtimepicker.digitalTimePicker.animUtils.AnimateUtils
+import com.gamapp.animationutils.AnimateUtils
+import com.gamapp.animationutils.AnimateUtils.Direction.ETS
+import com.gamapp.animationutils.AnimateUtils.Direction.STE
+
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -471,25 +474,22 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
             radioCardView.visibility = if (isExpand) View.VISIBLE else View.GONE
         }
     }
-    var clockSwitchAnimation = AnimateUtils(1).apply {
-        frame(0, 300) {
+    var clockSwitchAnimation = AnimateUtils{
+        animation(0, 300) {
             setVisibilityWithWeight(radialTimePickerView, it, pagesData.analogClockPercent)
-
         }.onStart {
-
             setVisibilityWithWeight(radialTimePickerView, 1f, pagesData.analogClockPercent)
         }.onEnd {
-
             setVisibilityWithWeight(radialTimePickerView, 0f, pagesData.analogClockPercent)
-        }.expand = false
+        }.mode(AnimateUtils.CurveModel.X_SIN).domain(1f,0.2f)
         //--------------
-        frame(300, 600) {
+        animation(300, 600) {
             setVisibilityWithWeight(digitalTimePicker, it, pagesData.digitalClockPercent)
         }.onStart {
             setVisibilityWithWeight(digitalTimePicker, 0f, pagesData.digitalClockPercent)
         }.onEnd {
             setVisibilityWithWeight(digitalTimePicker, 1f, pagesData.digitalClockPercent)
-        }.expand = true
+        }.mode(AnimateUtils.CurveModel.X_SIN).domain(0.2f,1f)
     }
 
 
@@ -516,11 +516,11 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
             digitalTimePicker.minute = pagesData.getPage().clockData.getMinute()
         if (pagesData.digitalAnalogClockMode == Analog) {
             if (radialTimePickerView.visibility != View.VISIBLE) {
-                clockSwitchAnimation.start(true)
+                clockSwitchAnimation.start(ETS)
             }
         } else {
             if (digitalTimePicker.visibility != View.VISIBLE) {
-                clockSwitchAnimation.start()
+                clockSwitchAnimation.start(STE)
             }
         }
         if (pagesData.getPage().clockData.timeCountMode == PageData.TimeCountMode.Mode24) {

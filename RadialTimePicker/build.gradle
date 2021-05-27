@@ -61,4 +61,7 @@ dependencies {
 // optional - Test helpers for LiveData
     testImplementation "androidx.arch.core:core-testing:$lifecycle_version"
 
+
+    implementation 'com.github.aliHosseinNezhad:AnimationUtils:1.2.0'
+
 }
