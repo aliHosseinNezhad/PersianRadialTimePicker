@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.transition.TransitionManager
 import android.view.*
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -508,21 +509,29 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
     private fun updateNonAnimationViews() {
         updateViewsColor()
         updateTexts()
+        TransitionManager.beginDelayedTransition(radialTimePickerView.parent as ViewGroup)
         if (digitalTimePicker.isAm != pagesData.getPage().clockData.time.am)
             digitalTimePicker.isAm = pagesData.getPage().clockData.time.am
         if (digitalTimePicker.hour != pagesData.getPage().clockData.getHour())
             digitalTimePicker.hour = pagesData.getPage().clockData.getHour()
         if (digitalTimePicker.minute != pagesData.getPage().clockData.getMinute())
             digitalTimePicker.minute = pagesData.getPage().clockData.getMinute()
+
+
         if (pagesData.digitalAnalogClockMode == Analog) {
             if (radialTimePickerView.visibility != View.VISIBLE) {
                 clockSwitchAnimation.start(ETS)
+//                radialTimePickerView.visibility = View.VISIBLE
+//                digitalTimePicker.visibility = View.GONE
             }
         } else {
             if (digitalTimePicker.visibility != View.VISIBLE) {
                 clockSwitchAnimation.start(STE)
+//                digitalTimePicker.visibility = View.VISIBLE
+//                radialTimePickerView.visibility = View.GONE
             }
         }
+
         if (pagesData.getPage().clockData.timeCountMode == PageData.TimeCountMode.Mode24) {
 //            (radioAmPmBtn.parent as View).visibility = View.GONE
             if (radioCardView.visibility == View.VISIBLE)
@@ -559,9 +568,9 @@ class TimePickerBottomSheetFragment : BottomSheetDialogFragment() {
         }
         if (pagesData.getPage().clockData.clockArrow == Minute) {
             hourTextBackShadow.visibility = View.VISIBLE
-            minuteTextBackShadow.visibility = View.INVISIBLE
+            minuteTextBackShadow.visibility = View.GONE
         } else {
-            hourTextBackShadow.visibility = View.INVISIBLE
+            hourTextBackShadow.visibility = View.GONE
             minuteTextBackShadow.visibility = View.VISIBLE
 
         }

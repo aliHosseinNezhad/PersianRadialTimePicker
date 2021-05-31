@@ -144,19 +144,20 @@ class RadialTimePickerView @JvmOverloads constructor(
         }.mode(LINEAR).domain(0f, 1f)
     }
     private var smoothMoveSelectorAnimation = ExtendedAnimateUtils().apply {
-        animation(0,selectorAngleChangeAnimationDuration){
+        animation(0, selectorAngleChangeAnimationDuration) {
             selectorAngleWeight =
-                circularNumber((aw1 + circularDifference(aw1, aw2) * sin(it * PI/2)).toFloat())
-            selectorRadiusWeight = (rw1 + (rw2 - rw1) * sin(it * PI/2)).toFloat()
+                circularNumber((aw1 + circularDifference(aw1, aw2) * sin(it * PI / 2)).toFloat())
+            selectorRadiusWeight = (rw1 + (rw2 - rw1) * sin(it * PI / 2)).toFloat()
             postInvalidate()
-        }.mode(LINEAR).domain(0f,1f).onStart {
+        }.mode(LINEAR).domain(0f, 1f).onStart {
             selectorAngleWeight =
                 circularNumber((aw1 + circularDifference(aw1, aw2) * 0f).toFloat())
             selectorRadiusWeight = (rw1 + (rw2 - rw1) * 0f).toFloat()
         }.onEnd {
             selectorAngleWeight =
-            circularNumber((aw1 + circularDifference(aw1, aw2) * 1f).toFloat())
-            selectorRadiusWeight = (rw1 + (rw2 - rw1) * 1f).toFloat() }
+                circularNumber((aw1 + circularDifference(aw1, aw2)).toFloat())
+            selectorRadiusWeight = rw2
+        }
     }
 
     private fun moveSelectorWithAnimation(aw1: Float, aw2: Float, rw1: Float, rw2: Float) {
@@ -180,7 +181,7 @@ class RadialTimePickerView @JvmOverloads constructor(
 
     fun getAngleByIndex(index: Int): Float {
         return when (clockMode) {
-            Minute -> index / 59f
+            Minute -> index / 60f
             Hour12 -> index / 12f
             Hour24 -> index / 12f
         }
@@ -614,11 +615,11 @@ class RadialTimePickerView @JvmOverloads constructor(
             ))
         val angle = if (add == 0.0) (bA) else (2 * add - bA);
 
-        val index = ((angle % (step / 2)) / (step) + angle / step).roundToInt().run {
-            if (this == count) {
+        val index = ((angle % (step / 2)) / (step) + angle / step).roundToInt().let {
+            if (it == count) {
                 count - 1;
             } else
-                this
+                it
         }
         return (index / count.toFloat()).also {
             Log.i("TAG023", "selectorAngleWeight: $it")
@@ -627,39 +628,6 @@ class RadialTimePickerView @JvmOverloads constructor(
 
 
 }
-
-abstract class AnimCountDownTimer(duration: Long, interval: Long) :
-    CountDownTimer(duration, interval) {
-    var aw1: Float = 0f
-        set(value) {
-            field = circularNumber(value)
-        }
-    var aw2: Float = 0f
-        set(value) {
-            field = circularNumber(value)
-        }
-
-    var rw1: Float = 0f
-    var rw2: Float = 0f
-
-    fun circularNumber(value: Float): Float {
-        return (value - value.toInt()).let {
-            if (it < 0) it + 1 else it
-        }
-    }
-
-    fun circularDifference(v1: Float, v2: Float) = (v2 - v1).let {
-        if (kotlin.math.abs(it) > 0.5f) {
-            (1 - kotlin.math.abs(it)) * -signOfNumber(it)
-        } else it
-    }
-
-    fun signOfNumber(value: Float) =
-        if (value > 0)
-            1f
-        else -1f
-}
-
 
 enum class ClockMode {
     Hour12, Hour24, Minute
